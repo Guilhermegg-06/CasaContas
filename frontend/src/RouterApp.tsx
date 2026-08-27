@@ -2,6 +2,9 @@ import { Navigate, Route, Routes } from 'react-router'
 import { AppShell } from './components/AppShell'
 import { AuthPage } from './pages/AuthPage'
 import { DashboardPage } from './pages/DashboardPage'
+import { ExpenseDetailPage } from './pages/ExpenseDetailPage'
+import { ExpenseFormPage } from './pages/ExpenseFormPage'
+import { ExpensesPage } from './pages/ExpensesPage'
 import { MembersPage } from './pages/MembersPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { useAuth } from './state/AuthContext'
@@ -36,6 +39,10 @@ export default function RouterApp() {
       <Route path="/cadastro" element={<AuthPage mode="register" />} />
       <Route path="/app" element={<ProtectedArea />}>
         <Route index element={<DashboardPage />} />
+        <Route path={'despesas'} element={<ExpensesPage />} />
+        <Route path={'despesas/nova'} element={<ExpenseFormPage />} />
+        <Route path={'despesas/:expenseId'} element={<ExpenseDetailPage />} />
+        <Route path={'despesas/:expenseId/editar'} element={<ExpenseFormPage />} />
         <Route path="moradores" element={<MembersPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/app" replace />} />
