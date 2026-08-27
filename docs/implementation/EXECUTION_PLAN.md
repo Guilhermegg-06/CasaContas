@@ -27,7 +27,7 @@ Atualizado em 2026-08-27. A marcação reflete evidência executada, não inten�
 - [x] despesas e divisões iguais/personalizadas com centavos determinísticos.
 - [x] pagamento principal, liquidação, reembolso, cancelamento e auditoria.
 - [x] idempotência persistente e transações.
-- [x] 17 testes, cobertura 80%, branches de domínio acima de 70% e PIT em 90%.
+- [x] 18 testes, cobertura 80%, branches de domínio acima de 70% e PIT em 90%.
 - [ ] teste específico de concorrência sob carga; classificado no backlog operacional.
 
 ## Gate 4 — consultas e experiência web

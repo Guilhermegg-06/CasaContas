@@ -13,7 +13,7 @@ Atualizado em 2026-08-27.
 
 | Verificação | Resultado |
 |---|---|
-| Backend | 17 testes, 0 falhas, 0 ignorados |
+| Backend | 18 testes, 0 falhas, 0 ignorados |
 | Arquitetura | 3 regras ArchUnit verdes |
 | Banco | PostgreSQL 17.6 via Testcontainers e Flyway V1 |
 | Cobertura | 1093/1366 linhas globais, 80,01% |
