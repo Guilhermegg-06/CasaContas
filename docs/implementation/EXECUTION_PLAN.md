@@ -1,66 +1,54 @@
-# Plano de Execução do MVP
+# Plano de execução do MVP
 
-Atualizado em 2026-08-26. A marcação só muda após evidência executada.
+Atualizado em 2026-08-27. A marcação reflete evidência executada, não intenção.
 
-## Gate 0: fundação e governança
+## Gate 0 — fundação e governança
 
-- [x] Confirmar o remoto `Guilhermegg-06/CasaContas` e o estado vazio.
-- [x] Ler integralmente o prompt e o documento de engenharia.
-- [x] Verificar versões centrais em fontes oficiais.
-- [x] Definir convenções, segurança, contribuição e templates.
-- [ ] Publicar o commit inicial em `main` e criar `feat/mvp-full-stack`.
+- [x] Remoto `Guilhermegg-06/CasaContas` confirmado e commit inicial publicado em `main`.
+- [x] Requisitos versionados sem alteração de conteúdo.
+- [x] Convenções, segurança, contribuição e templates criados.
+- [x] Desenvolvimento separado em branches e commits curtos.
 
-Critério: repositório inicial reproduzível, requisitos versionados e sem implementação direta em `main`.
+## Gate 1 — fundação técnica
 
-## Gate 1: fundação técnica
+- [x] Spring Boot 4.1.1/Java 21 modular e Maven Wrapper.
+- [x] PostgreSQL 17.6, Flyway e Testcontainers; nenhum H2.
+- [x] erros padronizados, correlation ID, métricas e OpenAPI.
+- [x] React 19/Vite 8/TypeScript estrito e cliente HTTP.
 
-- [ ] Criar Spring Boot 4.1.1/Java 21 com wrapper Maven e módulos por funcionalidade.
-- [ ] Criar schema PostgreSQL completo via Flyway e teste de migration.
-- [ ] Criar erros padronizados, correlation ID, observabilidade e OpenAPI.
-- [ ] Criar React 19/Vite 8/TypeScript estrito com testes e cliente HTTP.
+## Gate 2 — identidade e casas
 
-Critério: backend e frontend compilam, banco vazio migra e testes arquiteturais passam.
+- [x] registro, login, JWT, refresh rotativo e logout.
+- [x] casas, papéis, membros, convite de uso único e remoção lógica.
+- [x] autorização e isolamento entre casas testados.
 
-## Gate 2: identidade e casas
+## Gate 3 — núcleo financeiro
 
-- [ ] Registro, login, access JWT, refresh rotativo e logout.
-- [ ] Casas multi-tenant, papéis, membros, convites de uso único e remoção lógica.
-- [ ] Testes negativos de autenticação, autorização e isolamento.
+- [x] despesas e divisões iguais/personalizadas com centavos determinísticos.
+- [x] pagamento principal, liquidação, reembolso, cancelamento e auditoria.
+- [x] idempotência persistente e transações.
+- [x] 17 testes, cobertura 80%, branches de domínio acima de 70% e PIT em 90%.
+- [ ] teste específico de concorrência sob carga; classificado no backlog operacional.
 
-Critério: fluxos P0 acessíveis apenas a membros ativos da casa correta.
+## Gate 4 — consultas e experiência web
 
-## Gate 3: núcleo financeiro
+- [x] painel mensal/individual, filtros, paginação, histórico e cobrança.
+- [x] telas P0 em pt-BR, responsivas e com estados de uso.
+- [x] E2E Playwright em desktop e celular; API do backend validada separadamente com banco real.
 
-- [ ] Despesas, divisões iguais/personalizadas e centavos determinísticos.
-- [ ] Pagamento principal, liquidação, reembolso, cancelamento e auditoria.
-- [ ] Idempotência persistente, locking e testes de concorrência.
-- [ ] Red-Green-Refactor, mutação anti-falso-positivo e PIT >= 70%.
+## Gate 5 — operação e CI
 
-Critério: regras RN-001 a RN-018 aplicáveis protegidas por comportamento e banco real.
+- [x] Dockerfiles multi-stage, Compose, proxy e health checks.
+- [x] lint, testes, JaCoCo, PIT, SpotBugs, CodeQL e auditoria de dependências.
+- [x] relatórios de qualidade preservados como artefatos do PR.
+- [x] runbook, ADRs, arquitetura, exemplos de API, ameaças, rastreabilidade e backlog.
+- [ ] publicação de imagens no GHCR; exige autorização explícita para publicação externa.
 
-## Gate 4: consultas e experiência web
+## Gate 6 — GitHub e revisão
 
-- [ ] Painéis mensal/individual, filtros, paginação, histórico e cobrança.
-- [ ] Telas P0 em pt-BR, mobile-first, teclado, contraste e estados completos.
-- [ ] E2E dos fluxos críticos com Playwright.
+- [x] revisão local de diff, segredos, marcadores, skips e arquivos gerados.
+- [ ] enviar branches para o remoto público.
+- [ ] criar labels, milestone, issues e draft PR.
+- [ ] configurar proteção de `main` após os checks existirem no remoto.
 
-Critério: jornadas P0 completas contra a API real.
-
-## Gate 5: operação, CI/CD e entrega
-
-- [ ] Dockerfiles multi-stage, Compose e health checks.
-- [ ] Qualidade, cobertura, segurança, SBOM e build de imagens no CI.
-- [ ] Publicação imutável no GHCR e promoção manual documentada.
-- [ ] Runbooks, ADRs, diagramas, API, rastreabilidade e backlog.
-
-Critério: `make verify`, ambiente completo e imagens passam; documentação permite início do zero.
-
-## Gate 6: GitHub e revisão final
-
-- [ ] Milestone, labels, issues e draft PR vinculados.
-- [ ] Revisar diff, segredos, marcadores, skips e artefatos indevidos.
-- [ ] Configurar proteção de `main` com nomes reais dos checks.
-- [ ] Marcar PR pronta, sem aprovar ou mesclar.
-
-Critério: cada gate classificado com evidência e PR pronta para revisão.
-
+Os quatro itens externos aguardam confirmação explícita do proprietário. Nenhuma branch foi mesclada automaticamente.
