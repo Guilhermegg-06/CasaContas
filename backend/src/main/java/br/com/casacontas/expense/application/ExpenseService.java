@@ -215,5 +215,11 @@ public class ExpenseService {
       String notes,
       SplitType splitType,
       List<UUID> participantIds,
-      Map<UUID, BigDecimal> customShares) {}
+      Map<UUID, BigDecimal> customShares) {
+
+    public CreateExpense {
+      participantIds = List.copyOf(participantIds);
+      customShares = Map.copyOf(customShares);
+    }
+  }
 }

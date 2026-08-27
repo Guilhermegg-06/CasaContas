@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!-- Spring mantém estas dependências mutáveis por desenho; elas nunca são devolvidas pela API. -->
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Or>
+      <Class name="br.com.casacontas.expense.api.ExpenseController"/>
+      <Class name="br.com.casacontas.expense.application.ExpenseService"/>
+      <Class name="br.com.casacontas.expense.infrastructure.persistence.JpaExpenseAdapter"/>
+      <Class name="br.com.casacontas.household.api.HouseholdController"/>
+      <Class name="br.com.casacontas.reporting.infrastructure.persistence.JdbcReportingAdapter"/>
+      <Class name="br.com.casacontas.settlement.application.SettlementService"/>
+      <Class name="br.com.casacontas.shared.infrastructure.security.OpaqueTokenSupport"/>
+    </Or>
+  </Match>
+
+  <!-- O valor refletido aceita somente 1 a 64 caracteres da lista segura definida no filtro. -->
+  <Match>
+    <Class name="br.com.casacontas.shared.api.CorrelationIdFilter"/>
+    <Bug pattern="HRS_REQUEST_PARAMETER_TO_HTTP_HEADER"/>
+  </Match>
+</FindBugsFilter>

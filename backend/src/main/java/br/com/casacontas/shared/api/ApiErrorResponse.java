@@ -12,5 +12,9 @@ public record ApiErrorResponse(
     String traceId,
     List<FieldError> errors) {
 
+  public ApiErrorResponse {
+    errors = List.copyOf(errors);
+  }
+
   public record FieldError(String field, String message) {}
 }
