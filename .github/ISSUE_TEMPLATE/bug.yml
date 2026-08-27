@@ -1,0 +1,24 @@
+name: Bug
+description: Relatar um comportamento reproduzível sem dados sensíveis
+title: "fix: "
+labels: ["type:bug"]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Comportamento atual
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Passos para reproduzir
+    validations:
+      required: true
+

@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Relatar vulnerabilidade
+    url: https://github.com/Guilhermegg-06/CasaContas/security/advisories/new
+    about: Use o canal privado para problemas de segurança.
+

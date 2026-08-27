@@ -1,0 +1,23 @@
+name: Funcionalidade
+description: Rastrear uma entrega do produto
+title: "feat: "
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: input
+    id: requirements
+    attributes:
+      label: Requisitos relacionados
+      placeholder: RF-000, RN-000
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceitação
+    validations:
+      required: true
+
