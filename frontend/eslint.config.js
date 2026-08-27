@@ -27,12 +27,13 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true, allowExportNames: ['useAuth'] },
+        { allowConstantExport: true, allowExportNames: ['useAuth', 'useHousehold'] },
       ],
       '@typescript-eslint/no-misused-promises': [
         'error',
         { checksVoidReturn: { attributes: false } },
       ],
+      '@typescript-eslint/no-confusing-void-expression': 'off',
     },
   },
   {
