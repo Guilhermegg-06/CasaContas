@@ -182,15 +182,20 @@
               <rules>
                 <rule>
                   <element>BUNDLE</element>
-                  <includes>
-                    <include>br.com.casacontas.*.domain.*</include>
-                  </includes>
                   <limits>
                     <limit>
                       <counter>LINE</counter>
                       <value>COVEREDRATIO</value>
                       <minimum>0.80</minimum>
                     </limit>
+                  </limits>
+                </rule>
+                <rule>
+                  <element>BUNDLE</element>
+                  <includes>
+                    <include>br.com.casacontas.*.domain.*</include>
+                  </includes>
+                  <limits>
                     <limit>
                       <counter>BRANCH</counter>
                       <value>COVEREDRATIO</value>
@@ -230,7 +235,9 @@
             <param>br.com.casacontas.settlement.domain.*</param>
           </targetClasses>
           <targetTests>
-            <param>br.com.casacontas.*</param>
+            <param>br.com.casacontas.expense.domain.*</param>
+            <param>br.com.casacontas.household.domain.*</param>
+            <param>br.com.casacontas.identity.domain.*</param>
           </targetTests>
           <mutationThreshold>70</mutationThreshold>
           <coverageThreshold>80</coverageThreshold>

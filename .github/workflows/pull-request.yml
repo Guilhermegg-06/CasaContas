@@ -27,6 +27,17 @@ jobs:
       - name: Verificar backend
         working-directory: backend
         run: ./mvnw -B -ntp verify
+      - name: Validar testes por mutação
+        working-directory: backend
+        run: ./mvnw -B -ntp test-compile pitest:mutationCoverage
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-backend
+          path: |
+            backend/target/site/jacoco
+            backend/target/pit-reports
+            backend/target/surefire-reports
 
   frontend:
     name: Frontend — lint, testes e build
@@ -66,6 +77,11 @@ jobs:
       - name: Rodar jornada responsiva
         working-directory: frontend
         run: npm run test:e2e
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-playwright
+          path: frontend/playwright-report
 
   imagens:
     name: Imagens Docker
