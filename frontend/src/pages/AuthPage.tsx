@@ -117,6 +117,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
               <span>Senha</span>
               <span className="password-field">
                 <input
+                  aria-label={'Senha'}
                   type={showPassword ? 'text' : 'password'}
                   autoComplete={isRegister ? 'new-password' : 'current-password'}
                   placeholder={isRegister ? 'Pelo menos 10 caracteres' : 'Sua senha'}

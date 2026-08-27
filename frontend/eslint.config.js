@@ -15,7 +15,9 @@ export default tseslint.config(
       ecmaVersion: 2023,
       globals: globals.browser,
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['playwright.config.ts'],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
