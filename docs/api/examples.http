@@ -1,0 +1,71 @@
+@baseUrl = http://localhost:3000
+@accessToken = cole-o-access-token-aqui
+@householdId = cole-o-id-da-casa-aqui
+@memberId = cole-o-id-do-morador-aqui
+@expenseId = cole-o-id-da-despesa-aqui
+@shareId = cole-o-id-da-parte-aqui
+
+### Criar conta de usuário
+POST {{baseUrl}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "Ana Souza",
+  "email": "ana@example.test",
+  "password": "Senha forte 123"
+}
+
+### Entrar
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "ana@example.test",
+  "password": "Senha forte 123"
+}
+
+### Criar casa
+POST {{baseUrl}}/api/v1/households
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Apartamento Pajuçara",
+  "timezone": "America/Fortaleza"
+}
+
+### Listar moradores
+GET {{baseUrl}}/api/v1/households/{{householdId}}/members
+Authorization: Bearer {{accessToken}}
+
+### Criar despesa com divisão igual
+POST {{baseUrl}}/api/v1/households/{{householdId}}/expenses
+Authorization: Bearer {{accessToken}}
+Idempotency-Key: energia-2026-08
+Content-Type: application/json
+
+{
+  "title": "Energia de agosto",
+  "total": 100.00,
+  "category": "Moradia",
+  "dueDate": "2026-08-30",
+  "notes": "Leitura do mês",
+  "splitType": "EQUAL",
+  "participants": [
+    { "memberId": "{{memberId}}" }
+  ],
+  "paidByMemberId": null
+}
+
+### Consultar painel mensal
+GET {{baseUrl}}/api/v1/households/{{householdId}}/dashboard?month=2026-08
+Authorization: Bearer {{accessToken}}
+
+### Confirmar uma parte sem duplicar
+POST {{baseUrl}}/api/v1/households/{{householdId}}/expenses/{{expenseId}}/shares/{{shareId}}/settlements
+Authorization: Bearer {{accessToken}}
+Idempotency-Key: liquidacao-{{shareId}}
+
+### Gerar mensagem de cobrança
+GET {{baseUrl}}/api/v1/households/{{householdId}}/expenses/{{expenseId}}/charge-message?shareId={{shareId}}
+Authorization: Bearer {{accessToken}}
