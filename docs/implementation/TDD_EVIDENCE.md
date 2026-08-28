@@ -1,6 +1,6 @@
 # Evidências de qualidade e TDD
 
-Atualizado em 2026-08-27.
+Atualizado em 2026-08-28.
 
 ## Ciclos observados
 
@@ -24,6 +24,7 @@ Atualizado em 2026-08-27.
 | E2E | 2 jornadas Playwright: desktop e celular |
 | Dependências JS | `npm audit`: 0 vulnerabilidades |
 | Contêineres | imagens backend/frontend construídas; 3 serviços saudáveis |
-| Workflows | 3 arquivos aprovados pelo actionlint |
+| GHCR | backend b9689ee7 e frontend c4fbd219 publicados com tags de branch e commit |
+| Workflows | 4 arquivos aprovados pelo actionlint; primeira publicação concluída |
 
 O relatório global de branches é 47,28%. O gate de 70% é aplicado ao domínio, onde decisões de negócio se concentram; ampliar branches de aplicação e adaptadores permanece melhoria de qualidade sem reduzir a cobertura global de linhas de 80%.

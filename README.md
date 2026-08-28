@@ -2,7 +2,7 @@
 
 CasaContas organiza, divide e acompanha despesas de casas compartilhadas com precisão de centavos, isolamento entre casas e histórico auditável.
 
-O MVP v0.1.0 está implementado e validado localmente. A publicação das branches e de imagens permanece separada até autorização explícita para o repositório público `Guilhermegg-06/CasaContas` e para o GHCR.
+O MVP v0.1.0 está implementado, validado e publicado nas branches de trabalho do repositório `Guilhermegg-06/CasaContas`. As imagens do backend e do frontend também são geradas no GHCR.
 
 ## O que já funciona
 
@@ -32,6 +32,17 @@ Abra:
 - saúde: `http://localhost:8080/actuator/health`.
 
 Os valores padrão são somente para desenvolvimento. Troque `POSTGRES_PASSWORD` e `JWT_SECRET` no `.env` antes de compartilhar qualquer ambiente.
+
+## Imagens no GHCR
+
+As imagens da entrega podem ser obtidas pelas tags da branch:
+
+```bash
+docker pull ghcr.io/guilhermegg-06/casacontas-backend:docs-entrega-mvp
+docker pull ghcr.io/guilhermegg-06/casacontas-frontend:docs-entrega-mvp
+```
+
+Cada publicação também recebe a tag curta do commit. A tag `latest` é reservada para publicações da branch `main`.
 
 ## Verificar
 
