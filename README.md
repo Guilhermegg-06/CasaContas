@@ -69,7 +69,7 @@ Leia primeiro a [arquitetura](docs/architecture/README.md), a [rastreabilidade](
 ## Qualidade comprovada
 
 - 18 testes de backend e 3 regras arquiteturais;
-- 80,01% de linhas globais e 74,3% de branches no domínio;
+- 80,08% de linhas globais e 74,3% de branches no domínio;
 - mutation score de 90% no domínio financeiro;
 - SpotBugs sem achados não filtrados;
 - 8 testes Vitest e 2 jornadas Playwright;

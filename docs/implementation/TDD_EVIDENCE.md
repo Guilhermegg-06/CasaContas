@@ -16,7 +16,7 @@ Atualizado em 2026-08-27.
 | Backend | 18 testes, 0 falhas, 0 ignorados |
 | Arquitetura | 3 regras ArchUnit verdes |
 | Banco | PostgreSQL 17.6 via Testcontainers e Flyway V1 |
-| Cobertura | 1093/1366 linhas globais, 80,01% |
+| Cobertura | 852/1064 linhas globais, 80,08% |
 | Ramos do domínio | 52/70, 74,3% |
 | Mutação do domínio | 46/51 mortos, 90%; força 98% |
 | Análise estática | SpotBugs com 0 avisos e 0 erros não filtrados |
