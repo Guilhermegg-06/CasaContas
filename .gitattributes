@@ -11,3 +11,6 @@ backend/mvnw.cmd text eol=crlf
 *.json text eol=lf
 *.css text eol=lf
 *.md text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.html text eol=lf
