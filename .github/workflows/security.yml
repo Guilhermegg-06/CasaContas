@@ -1,6 +1,10 @@
 name: Auditoria de dependências
 
 on:
+  workflow_call:
+    secrets:
+      NVD_API_KEY:
+        required: false
   schedule:
     - cron: "41 5 * * 1"
   workflow_dispatch:
@@ -25,7 +29,12 @@ jobs:
         working-directory: backend
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: ./mvnw -B -ntp -Psecurity -DskipTests verify
+        run: ./mvnw -B -ntp -Psecurity dependency-check:check
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditoria-java
+          path: backend/target/dependency-check-report.*
 
   frontend:
     name: Dependências JavaScript
