@@ -34,4 +34,11 @@ Atualizado em 2026-09-24. Este registro substitui afirmações históricas de ap
 - Ainda não há revisão desta fase aprovada no GitHub nem PR aberto.
 
 ## Próximo passo
-- Executar o wrapper em Linux/Java 21 e validar o primeiro commit de CI.
+- Commit `9d44983` enviado; PR https://github.com/Guilhermegg-06/CasaContas/pull/13
+- Issue https://github.com/Guilhermegg-06/CasaContas/issues/12
+- CI 36069729049: backend (verify/PIT), frontend, navegador simulado, imagens e CodeQL verdes.
+- Auditoria Java falhou: NVD recebeu chave vazia; correção de configuração em andamento.
+- Local: actionlint aprovado; npm ci sem vulnerabilidades; Docker ativo.
+- Checkout CRLF reprovou Spotless local; `.gitattributes` agora fixa LF para fontes.
+- Conector GitHub sem escrita (403); autenticação Git local permitiu issue/PR/push.
+- Próximo: regressões financeiras e jornada real; ainda não pronto para homologação.

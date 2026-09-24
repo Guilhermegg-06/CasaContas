@@ -265,7 +265,7 @@
             <version>${dependency-check.version}</version>
             <configuration>
               <failBuildOnCVSS>7</failBuildOnCVSS>
-              <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+              <nvdApiKeyEnvironmentVariable>NVD_API_KEY</nvdApiKeyEnvironmentVariable>
               <formats>
                 <format>HTML</format>
                 <format>JSON</format>
