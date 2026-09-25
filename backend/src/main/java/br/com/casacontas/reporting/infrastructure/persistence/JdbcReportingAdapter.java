@@ -45,7 +45,7 @@ public class JdbcReportingAdapter implements ReportingRepository {
                   COALESCE(SUM(es.amount) FILTER (WHERE e.status <> 'CANCELLED' AND es.member_id = :memberId AND es.status IN ('COVERED','SETTLED')), 0) AS i_paid,
                   COALESCE(SUM(es.amount) FILTER (WHERE e.status <> 'CANCELLED' AND e.paid_by_member_id = :memberId AND es.member_id <> :memberId AND es.status = 'PENDING'), 0) AS i_receive
                 FROM month_expenses e
-                LEFT JOIN expense_shares es ON es.expense_id = e.id
+                LEFT JOIN expense_shares es ON es.expense_id = e.id AND es.active
                 """;
     return jdbc.queryForObject(
         sql,

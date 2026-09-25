@@ -1,6 +1,7 @@
 package br.com.casacontas.expense.domain;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Collections;
@@ -19,14 +20,15 @@ public final class SplitCalculator {
     BigDecimal normalizedTotal = requirePositiveMoney(total, "valor total");
     requireUniqueParticipants(memberIds);
 
-    long totalCents = normalizedTotal.movePointRight(MONEY_SCALE).longValueExact();
-    long baseCents = totalCents / memberIds.size();
-    long remainder = totalCents % memberIds.size();
+    BigInteger totalCents = normalizedTotal.movePointRight(MONEY_SCALE).toBigIntegerExact();
+    BigInteger[] division = totalCents.divideAndRemainder(BigInteger.valueOf(memberIds.size()));
+    BigInteger baseCents = division[0];
+    int remainder = division[1].intValueExact();
     Map<UUID, BigDecimal> result = new LinkedHashMap<>();
 
     for (int index = 0; index < memberIds.size(); index++) {
-      long cents = baseCents + (index < remainder ? 1 : 0);
-      result.put(memberIds.get(index), BigDecimal.valueOf(cents, MONEY_SCALE));
+      BigInteger cents = baseCents.add(index < remainder ? BigInteger.ONE : BigInteger.ZERO);
+      result.put(memberIds.get(index), new BigDecimal(cents, MONEY_SCALE));
     }
     return Collections.unmodifiableMap(new LinkedHashMap<>(result));
   }

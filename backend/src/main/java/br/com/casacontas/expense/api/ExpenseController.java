@@ -7,6 +7,7 @@ import br.com.casacontas.expense.domain.ExpenseShare;
 import br.com.casacontas.expense.domain.FinancialRuleException;
 import br.com.casacontas.expense.domain.ShareStatus;
 import br.com.casacontas.expense.domain.SplitType;
+import br.com.casacontas.household.application.HouseholdCalendar;
 import br.com.casacontas.settlement.application.SettlementService;
 import br.com.casacontas.settlement.domain.Settlement;
 import br.com.casacontas.settlement.domain.SettlementType;
@@ -16,17 +17,16 @@ import br.com.casacontas.shared.application.PageResult;
 import br.com.casacontas.shared.domain.AuditEvent;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneOffset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,19 +51,19 @@ public class ExpenseController {
   private final SettlementService settlementService;
   private final AuditPort audit;
   private final CurrentUser currentUser;
-  private final Clock clock;
+  private final HouseholdCalendar calendar;
 
   public ExpenseController(
       ExpenseService service,
       SettlementService settlementService,
       AuditPort audit,
       CurrentUser currentUser,
-      Clock clock) {
+      HouseholdCalendar calendar) {
     this.service = service;
     this.settlementService = settlementService;
     this.audit = audit;
     this.currentUser = currentUser;
-    this.clock = clock;
+    this.calendar = calendar;
   }
 
   @PostMapping
@@ -72,12 +72,9 @@ public class ExpenseController {
       @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey,
       @Valid @RequestBody ExpenseRequest request) {
     UUID userId = currentUser.id();
-    Expense expense = service.create(userId, request.toCommand(householdId));
-    if (request.paidByMemberId() != null) {
-      settlementService.registerPrimaryPayment(
-          userId, householdId, expense.id(), request.paidByMemberId(), idempotencyKey);
-      expense = service.detail(userId, householdId, expense.id());
-    }
+    Expense expense =
+        service.create(
+            userId, request.toCommand(householdId), request.paidByMemberId(), idempotencyKey);
     ExpenseResponse response = toResponse(expense, true);
     return ResponseEntity.created(
             URI.create("/api/v1/households/" + householdId + "/expenses/" + expense.id()))
@@ -172,7 +169,7 @@ public class ExpenseController {
                 .map(SettlementResponse::from)
                 .toList()
             : List.of();
-    LocalDate today = LocalDate.now(clock.withZone(ZoneOffset.UTC));
+    LocalDate today = calendar.today(expense.householdId());
     return new ExpenseResponse(
         expense.id(),
         expense.householdId(),
@@ -195,7 +192,7 @@ public class ExpenseController {
 
   record ExpenseRequest(
       @NotBlank @Size(max = 120) String title,
-      @NotNull @DecimalMin(value = "0.01") BigDecimal total,
+      @NotNull @DecimalMin(value = "0.01") @Digits(integer = 17, fraction = 2) BigDecimal total,
       @NotBlank @Size(max = 40) String category,
       @NotNull LocalDate dueDate,
       @Size(max = 500) String notes,
@@ -219,7 +216,8 @@ public class ExpenseController {
   }
 
   record ParticipantRequest(
-      @NotNull UUID memberId, @DecimalMin(value = "0.01") BigDecimal amount) {}
+      @NotNull UUID memberId,
+      @DecimalMin(value = "0.01") @Digits(integer = 17, fraction = 2) BigDecimal amount) {}
 
   record PrimaryPaymentRequest(@NotNull UUID payerMemberId) {}
 
