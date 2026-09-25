@@ -38,7 +38,8 @@ Atualizado em 2026-09-24. Este registro substitui afirmações históricas de ap
 - Issue https://github.com/Guilhermegg-06/CasaContas/issues/12
 - CI 36069729049: backend (verify/PIT), frontend, navegador simulado, imagens e CodeQL verdes.
 - Auditoria Java: defeito confirmado no Dependency-Check 13.0.0 sem chave NVD.
-- Correção pontual para 13.0.1: https://github.com/dependency-check/DependencyCheck/pull/8716
+- Correção upstream prevista para 13.0.1, ainda não publicada no Maven Central.
+- Mantido 13.0.0 com feed JSON 2.0 oficial da NVD; auditoria continua obrigatória.
 - Local: actionlint aprovado; npm ci sem vulnerabilidades; Docker ativo.
 - Checkout CRLF reprovou Spotless local; `.gitattributes` agora fixa LF para fontes.
 - Conector GitHub sem escrita (403); autenticação Git local permitiu issue/PR/push.
