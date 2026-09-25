@@ -2,7 +2,7 @@
 
 CasaContas organiza, divide e acompanha despesas de casas compartilhadas com precisão de centavos, isolamento entre casas e histórico auditável.
 
-O MVP v0.1.0 está implementado, validado e publicado nas branches de trabalho do repositório `Guilhermegg-06/CasaContas`. As imagens do backend e do frontend também são geradas no GHCR.
+O MVP P0 está implementado e passa por estabilização da integração e preparação de homologação. Consulte o [registro de continuidade](docs/implementation/STATUS.md) para a revisão validada, evidências e bloqueios atuais. A existência de código ou imagem não comprova aprovação para publicação.
 
 ## O que já funciona
 
@@ -35,14 +35,10 @@ Os valores padrão são somente para desenvolvimento. Troque `POSTGRES_PASSWORD`
 
 ## Imagens no GHCR
 
-As imagens da entrega podem ser obtidas pelas tags da branch:
-
-```bash
-docker pull ghcr.io/guilhermegg-06/casacontas-backend:docs-entrega-mvp
-docker pull ghcr.io/guilhermegg-06/casacontas-frontend:docs-entrega-mvp
-```
-
-Cada publicação também recebe a tag curta do commit. A tag `latest` é reservada para publicações da branch `main`.
+O workflow de publicação depende das verificações da mesma revisão na `main`.
+PRs constroem imagens para validação. Antes de usar uma imagem em homologação,
+confira o commit, o resultado de todos os checks e fixe seu digest. Tags antigas
+de branches não são evidência de aprovação atual.
 
 ## Verificar
 
@@ -55,7 +51,7 @@ Sem `make`:
 
 ```powershell
 cd backend
-mvnw.cmd verify
+.\mvnw.cmd verify
 cd ..\frontend
 npm ci
 npm run verify
@@ -63,6 +59,20 @@ npm run test:e2e
 ```
 
 O backend exige Java 21 e Docker ativo porque os testes usam PostgreSQL 17.6 via Testcontainers. O frontend usa Node 22.20.0 no CI.
+
+No Windows, com Docker ativo e Node instalado, os verificadores isolados evitam
+depender do JDK selecionado na IDE e da velocidade da pasta sincronizada:
+
+```powershell
+./scripts/verify-backend.ps1
+node scripts/verify-frontend.mjs
+```
+
+`npm run test:e2e` valida a interface com respostas de API simuladas. Os testes
+Spring usam PostgreSQL real. A jornada de sistema usa navegador, API e PostgreSQL
+sem interceptações, em banco próprio: `node scripts/test-system.mjs` (Chromium do
+Playwright instalado em `frontend/`). Para instalá-lo, execute `npx playwright
+install chromium` nessa pasta. O volume de teste permanece após a execução.
 
 ## Estrutura
 
@@ -75,19 +85,13 @@ O backend exige Java 21 e Docker ativo porque os testes usam PostgreSQL 17.6 via
 - `docs/implementation/`: plano, evidências, rastreabilidade e backlog;
 - `.github/`: templates, Dependabot e workflows.
 
-Leia primeiro a [arquitetura](docs/architecture/README.md), a [rastreabilidade](docs/implementation/TRACEABILITY.md) e o [runbook](docs/operations/RUNBOOK.md).
+Leia primeiro a [arquitetura](docs/architecture/README.md), a [rastreabilidade](docs/implementation/TRACEABILITY.md) e o [runbook](docs/operations/RUNBOOK.md). A [preparação de homologação](docs/operations/HOMOLOGACAO.md) descreve configuração, backup, restauração e limites de retorno entre versões.
 
-## Qualidade comprovada
+## Evidências de qualidade
 
-- 18 testes de backend e 3 regras arquiteturais;
-- 80,08% de linhas globais e 74,3% de branches no domínio;
-- mutation score de 90% no domínio financeiro;
-- SpotBugs sem achados não filtrados;
-- 8 testes Vitest e 2 jornadas Playwright;
-- imagens Docker construídas e serviços saudáveis;
-- workflows aprovados pelo actionlint.
-
-Detalhes e ressalvas estão em [TDD_EVIDENCE.md](docs/implementation/TDD_EVIDENCE.md).
+Resultados pertencem à revisão em que foram executados. Os números históricos
+do MVP não aprovam mudanças posteriores. Consulte [STATUS.md](docs/implementation/STATUS.md),
+[TDD_EVIDENCE.md](docs/implementation/TDD_EVIDENCE.md) e os checks do PR.
 
 ## Escopo
 

@@ -14,6 +14,15 @@ async function register(page: Page, name: string, email: string) {
   await expect(page.getByRole('heading', { name: 'Qual casa vamos organizar?' })).toBeVisible()
 }
 
+async function logout(page: Page) {
+  const completed = page.waitForResponse(
+    (response) => response.url().endsWith('/auth/logout') && response.request().method() === 'POST',
+  )
+  await page.getByRole('button', { name: 'Sair', exact: true }).first().click()
+  expect((await completed).status()).toBe(204)
+  await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible()
+}
+
 async function session(page: Page): Promise<AuthSession> {
   return page.evaluate(() => {
     const raw = sessionStorage.getItem('casacontas.session')
@@ -209,8 +218,7 @@ test('jornada P0 com navegador, API e PostgreSQL reais, incluindo reinício', as
 
     // Outra identidade no mesmo navegador também deve perder todo o cache da casa anterior.
     const oldRefresh = (await session(page)).refreshToken
-    await page.getByRole('button', { name: 'Sair', exact: true }).first().click()
-    await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible()
+    await logout(page)
     const loggedOut = await page.request.post('/api/v1/auth/refresh', {
       data: { refreshToken: oldRefresh },
     })
@@ -273,8 +281,7 @@ test('jornada P0 com navegador, API e PostgreSQL reais, incluindo reinício', as
       true,
     )
     expect(await read<MonthlyDashboard>(page, dashboardUrl)).toEqual(after)
-    await page.getByRole('button', { name: 'Sair', exact: true }).first().click()
-    await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible()
+    await logout(page)
     await register(page, 'Dora Teste', 'dora@casacontas.test')
     await page.getByRole('button', { name: /Criar uma casa/ }).click()
     await page.getByLabel('Nome da casa').fill('Outra Casa')
