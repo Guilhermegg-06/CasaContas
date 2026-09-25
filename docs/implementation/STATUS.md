@@ -13,6 +13,7 @@ Atualizado em 2026-09-25. Evidências valem para a revisão indicada.
 
 ## Concluído
 - Maven Wrapper 100755/LF; publicação depende dos checks da mesma revisão.
+- CodeQL integrado ao workflow obrigatório; execução semanal/manual preservada.
 - Auditoria NVD obrigatória recuperada, sem reduzir gates ou suprimir CVEs.
 - Tomcat 11.0.26 e Swagger UI 5.32.15; versão do WebJar alinhada ao Springdoc.
 - Sessão: refresh compartilhado, logout não restaura sessão e cache separado por usuário.
@@ -45,6 +46,7 @@ Atualizado em 2026-09-25. Evidências valem para a revisão indicada.
 - Jornada local com logout sincronizado passou (1,8 min); ensaio completo em system-confirmed.
 - system-confirmed revelou inicialização prematura no restore; mesmo dump passou
   após correção em restore-readiness-green.log. Homologação local em homolog-local-green.log.
+- Ensaio local de homologação aprovado após o 404: saúde, cadastro, CORS, migrations e portas.
 - actionlint-final.log aprovado; frontend-new-tests-lint.log sem erros; Prettier aprovado.
 - Reprodução/correção e distinção de falhas de infraestrutura em TDD_EVIDENCE.md.
 - Novas revisões exigem todos os checks do PR novamente; não inferir aprovação do HEAD.

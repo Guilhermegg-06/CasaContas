@@ -137,9 +137,15 @@ jobs:
     uses: ./.github/workflows/security.yml
     secrets: inherit
 
+  codeql:
+    permissions:
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/codeql.yml
+
   publicar:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [backend, frontend, navegador, integracao, imagens, seguranca]
+    needs: [backend, frontend, navegador, integracao, imagens, seguranca, codeql]
     permissions:
       contents: read
       packages: write
