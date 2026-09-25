@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { apiRequest, getSession, setSession, subscribeSession } from '../lib/api'
 import type { AuthSession } from '../types'
 
@@ -21,9 +22,17 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient()
   const [session, updateSession] = useState(getSession)
 
-  useEffect(() => subscribeSession(updateSession), [])
+  useEffect(() => {
+    let previousUserId = getSession()?.user.id
+    return subscribeSession((next) => {
+      if (next?.user.id !== previousUserId) queryClient.clear()
+      previousUserId = next?.user.id
+      updateSession(next)
+    })
+  }, [queryClient])
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -43,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(next)
       },
       async logout() {
-        const refreshToken = session?.refreshToken
+        const refreshToken = getSession()?.refreshToken
         setSession(null)
         if (refreshToken) {
           await apiRequest<undefined>('/api/v1/auth/logout', {

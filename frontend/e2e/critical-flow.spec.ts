@@ -22,7 +22,7 @@ const members = [
     userId: 'user-2',
     name: 'Bruno Luz',
     email: 'bruno@example.com',
-    role: 'RESIDENT',
+    role: 'MEMBER',
     joinedAt: '2026-08-02T12:00:00Z',
   },
   {
@@ -30,7 +30,7 @@ const members = [
     userId: 'user-3',
     name: 'Caio Reis',
     email: 'caio@example.com',
-    role: 'RESIDENT',
+    role: 'MEMBER',
     joinedAt: '2026-08-03T12:00:00Z',
   },
 ]

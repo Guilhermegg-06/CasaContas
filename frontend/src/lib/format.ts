@@ -26,10 +26,11 @@ export function formatDate(value: string) {
   return dateFormatter.format(new Date(`${value}T12:00:00Z`)).replace('.', '')
 }
 
-export function formatInstant(value: string) {
+export function formatInstant(value: string, timeZone = 'UTC') {
   return new Intl.DateTimeFormat('pt-BR', {
     dateStyle: 'medium',
     timeStyle: 'short',
+    timeZone,
   }).format(new Date(value))
 }
 
@@ -38,8 +39,16 @@ export function formatMonth(value: string) {
   return monthFormatter.format(new Date(Date.UTC(year, month - 1, 1)))
 }
 
-export function currentMonth() {
-  return new Date().toISOString().slice(0, 7)
+export function currentMonth(timeZone = 'UTC') {
+  const parts = new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    month: '2-digit',
+    timeZone,
+  }).formatToParts(new Date())
+  const year = parts.find((part) => part.type === 'year')?.value
+  const month = parts.find((part) => part.type === 'month')?.value
+  if (!year || !month) throw new Error('Não foi possível calcular o mês da casa')
+  return `${year}-${month}`
 }
 
 export function shiftMonth(value: string, amount: number) {
@@ -61,7 +70,7 @@ export function initials(name: string | null | undefined) {
 export const roleLabel: Record<Role, string> = {
   OWNER: 'Proprietário',
   ADMIN: 'Administrador',
-  RESIDENT: 'Morador',
+  MEMBER: 'Morador',
 }
 
 export const statusLabel: Record<ExpenseStatus | ShareStatus, string> = {

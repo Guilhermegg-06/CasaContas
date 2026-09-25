@@ -11,11 +11,22 @@ import { useAuth } from './state/AuthContext'
 import { HouseholdProvider, useHousehold } from './state/HouseholdContext'
 
 function HouseholdGate() {
-  const { households, isLoading } = useHousehold()
+  const { households, isLoading, error, retry } = useHousehold()
   if (isLoading)
     return (
       <div className="placeholder-page">
         <div className="skeleton" />
+      </div>
+    )
+  if (error)
+    return (
+      <div className="placeholder-page">
+        <div className="inline-error" role="alert">
+          {error.message}
+        </div>
+        <button className="button" onClick={retry}>
+          Tentar novamente
+        </button>
       </div>
     )
   if (households.length === 0) return <OnboardingPage />

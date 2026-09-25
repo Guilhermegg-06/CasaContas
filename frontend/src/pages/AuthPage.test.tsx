@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import userEvent from '@testing-library/user-event'
 import { HttpResponse, http } from 'msw'
 import { MemoryRouter, Route, Routes } from 'react-router'
@@ -28,14 +29,16 @@ describe('AuthPage', () => {
     const user = userEvent.setup()
 
     render(
-      <MemoryRouter initialEntries={['/entrar']}>
-        <AuthProvider>
-          <Routes>
-            <Route path="/entrar" element={<AuthPage mode="login" />} />
-            <Route path="/app" element={<h1>Área protegida</h1>} />
-          </Routes>
-        </AuthProvider>
-      </MemoryRouter>,
+      <QueryClientProvider client={new QueryClient()}>
+        <MemoryRouter initialEntries={['/entrar']}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/entrar" element={<AuthPage mode="login" />} />
+              <Route path="/app" element={<h1>Área protegida</h1>} />
+            </Routes>
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>,
     )
 
     await user.type(screen.getByLabelText('E-mail'), 'ana@example.com')
@@ -49,11 +52,13 @@ describe('AuthPage', () => {
     const user = userEvent.setup()
 
     render(
-      <MemoryRouter>
-        <AuthProvider>
-          <AuthPage mode="register" />
-        </AuthProvider>
-      </MemoryRouter>,
+      <QueryClientProvider client={new QueryClient()}>
+        <MemoryRouter>
+          <AuthProvider>
+            <AuthPage mode="register" />
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>,
     )
 
     await user.click(screen.getByRole('button', { name: 'Criar minha conta' }))

@@ -27,7 +27,7 @@ export function ExpensesPage() {
   const { activeHousehold } = useHousehold()
   const [params, setParams] = useSearchParams()
   const householdId = activeHousehold?.id ?? ''
-  const month = params.get('month') ?? currentMonth()
+  const month = params.get('month') ?? currentMonth(activeHousehold?.timezone)
   const status = params.get('status') ?? ''
   const category = params.get('category') ?? ''
   const memberId = params.get('memberId') ?? ''

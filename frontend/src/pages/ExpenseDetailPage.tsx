@@ -85,7 +85,12 @@ export function ExpenseDetailPage() {
     return <div className="inline-error">Despesa não encontrada ou sem acesso.</div>
   const data = expense.data
   const memberById = new Map(members.data?.map((member) => [member.id, member]) ?? [])
-  const canEdit = data.status === 'PENDING' && data.settlements.length === 0
+  const payable = data.status === 'PENDING' || data.status === 'OVERDUE'
+  const canEdit =
+    payable &&
+    data.settlements.length === 0 &&
+    (canManage || data.createdByMemberId === currentMember?.id)
+  const operationError = primaryPayment.error ?? settleShare.error ?? cancel.error ?? charge.error
 
   return (
     <>
@@ -115,6 +120,11 @@ export function ExpenseDetailPage() {
           )}
         </div>
       </header>
+      {operationError && (
+        <div className="inline-error" role="alert">
+          {operationError.message}
+        </div>
+      )}
       <section className="detail-layout">
         <div>
           <article className="detail-hero card">
@@ -147,7 +157,7 @@ export function ExpenseDetailPage() {
                 </strong>
               </div>
             </div>
-            {!data.paidByMemberId && data.status !== 'CANCELLED' && (
+            {!data.paidByMemberId && payable && data.settlements.length === 0 && (
               <div className="form-section">
                 <label className="field">
                   <span>Registrar quem pagou a conta</span>
@@ -159,11 +169,13 @@ export function ExpenseDetailPage() {
                     disabled={primaryPayment.isPending}
                   >
                     <option value="">Escolha uma pessoa</option>
-                    {members.data?.map((member) => (
-                      <option key={member.id} value={member.id}>
-                        {member.name}
-                      </option>
-                    ))}
+                    {members.data
+                      ?.filter((member) => canManage || member.id === currentMember?.id)
+                      .map((member) => (
+                        <option key={member.id} value={member.id}>
+                          {member.name}
+                        </option>
+                      ))}
                   </select>
                 </label>
               </div>
@@ -178,7 +190,9 @@ export function ExpenseDetailPage() {
               {data.shares.map((share) => {
                 const member = memberById.get(share.memberId)
                 const canSettle =
-                  share.status === 'PENDING' && (canManage || share.memberId === currentMember?.id)
+                  payable &&
+                  share.status === 'PENDING' &&
+                  (canManage || share.memberId === currentMember?.id)
                 return (
                   <div className="share-row" key={share.id}>
                     <span className="avatar">{initials(member?.name)}</span>
@@ -196,7 +210,7 @@ export function ExpenseDetailPage() {
                         <CheckCircleIcon /> Confirmar
                       </button>
                     )}
-                    {share.status === 'PENDING' && data.paidByMemberId && (
+                    {payable && share.status === 'PENDING' && data.paidByMemberId && (
                       <button
                         className="icon-button"
                         aria-label={`Copiar cobrança para ${member?.name ?? 'morador'}`}
@@ -221,7 +235,7 @@ export function ExpenseDetailPage() {
                 <span className="timeline__dot" />
                 <span>
                   <strong>Despesa criada</strong>
-                  <small>{formatInstant(data.createdAt)}</small>
+                  <small>{formatInstant(data.createdAt, activeHousehold?.timezone)}</small>
                 </span>
               </div>
             ) : (
@@ -231,7 +245,7 @@ export function ExpenseDetailPage() {
                     <span className="timeline__dot" />
                     <span>
                       <strong>{event.eventType.replaceAll('_', ' ')}</strong>
-                      <small>{formatInstant(event.occurredAt)}</small>
+                      <small>{formatInstant(event.occurredAt, activeHousehold?.timezone)}</small>
                     </span>
                   </div>
                 ))}
@@ -245,7 +259,8 @@ export function ExpenseDetailPage() {
                           : 'Reembolso confirmado'}
                       </strong>
                       <small>
-                        {formatCurrency(settlement.amount)} · {formatInstant(settlement.occurredAt)}
+                        {formatCurrency(settlement.amount)} ·{' '}
+                        {formatInstant(settlement.occurredAt, activeHousehold?.timezone)}
                       </small>
                     </span>
                   </div>

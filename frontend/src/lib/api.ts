@@ -4,6 +4,7 @@ const SESSION_KEY = 'casacontas.session'
 const API_URL = import.meta.env.VITE_API_URL ?? window.location.origin
 
 let currentSession = readStoredSession()
+let pendingRefresh: { source: AuthSession; promise: Promise<AuthSession | null> } | null = null
 const listeners = new Set<(session: AuthSession | null) => void>()
 
 export class ApiError extends Error {
@@ -61,20 +62,30 @@ async function decodeError(response: Response) {
   }
 }
 
-async function refreshSession() {
-  if (!currentSession?.refreshToken) return null
-  const response = await fetch(`${API_URL}/api/v1/auth/refresh`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refreshToken: currentSession.refreshToken }),
+function refreshSession(): Promise<AuthSession | null> {
+  const source = currentSession
+  if (!source?.refreshToken) return Promise.resolve(null)
+  if (pendingRefresh?.source === source) return pendingRefresh.promise
+  const promise = (async () => {
+    const response = await fetch(`${API_URL}/api/v1/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: source.refreshToken }),
+    })
+    if (currentSession !== source) return null
+    if (!response.ok) {
+      if (response.status === 401) setSession(null)
+      throw await decodeError(response)
+    }
+    const session = (await response.json()) as AuthSession
+    if (currentSession !== source) return null
+    setSession(session)
+    return session
+  })().finally(() => {
+    if (pendingRefresh?.promise === promise) pendingRefresh = null
   })
-  if (!response.ok) {
-    setSession(null)
-    return null
-  }
-  const session = (await response.json()) as AuthSession
-  setSession(session)
-  return session
+  pendingRefresh = { source, promise }
+  return promise
 }
 
 export async function apiRequest<T>(
@@ -83,11 +94,22 @@ export async function apiRequest<T>(
   retry = true,
 ): Promise<T> {
   const headers = new Headers(init.headers)
+  const requestSession = currentSession
+  const authentication = path.startsWith('/api/v1/auth/')
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json')
-  if (currentSession) headers.set('Authorization', `Bearer ${currentSession.accessToken}`)
+  if (requestSession && !authentication)
+    headers.set('Authorization', `Bearer ${requestSession.accessToken}`)
 
   const response = await fetch(`${API_URL}${path}`, { ...init, headers })
-  if (response.status === 401 && retry && currentSession?.refreshToken) {
+  if (
+    response.status === 401 &&
+    retry &&
+    !authentication &&
+    requestSession?.user.id === currentSession?.user.id &&
+    currentSession?.refreshToken
+  ) {
+    if (requestSession?.accessToken !== currentSession.accessToken)
+      return apiRequest<T>(path, init, false)
     const refreshed = await refreshSession()
     if (refreshed) return apiRequest<T>(path, init, false)
   }

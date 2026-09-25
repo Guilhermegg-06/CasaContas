@@ -105,6 +105,7 @@ function ExpenseForm({ members, initial }: { members: Member[]; initial?: Expens
           })
     },
     onSuccess: async (saved) => {
+      queryClient.setQueryData(['expense', householdId, saved.id], saved)
       await queryClient.invalidateQueries({ queryKey: ['expenses', householdId] })
       await queryClient.invalidateQueries({ queryKey: ['dashboard', householdId] })
       void navigate(`/app/despesas/${saved.id}`)
