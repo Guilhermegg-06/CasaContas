@@ -90,6 +90,39 @@ jobs:
           name: relatorio-playwright
           path: frontend/playwright-report
 
+  integracao:
+    name: Jornada real com PostgreSQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22.20.0"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Instalar dependências
+        working-directory: frontend
+        run: npm ci
+      - name: Instalar Chromium
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Validar jornada real e persistência
+        run: node scripts/test-system.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jornada-real
+          include-hidden-files: true
+          path: |
+            frontend/playwright-report-real
+            frontend/test-results
+            .data/evidence/*/result.txt
+            .data/evidence/*/services.log
+            .data/evidence/*/backup/restore-result.json
+            .data/evidence/*/homolog-result.json
+            .data/evidence/*/homolog-services.log
+
   imagens:
     name: Imagens Docker
     runs-on: ubuntu-latest
@@ -106,7 +139,7 @@ jobs:
 
   publicar:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [backend, frontend, navegador, imagens, seguranca]
+    needs: [backend, frontend, navegador, integracao, imagens, seguranca]
     permissions:
       contents: read
       packages: write

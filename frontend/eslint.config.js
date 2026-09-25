@@ -5,7 +5,16 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'playwright-report', 'src/*.scaffold.*'] },
+  {
+    ignores: [
+      'dist',
+      'coverage',
+      'playwright-report',
+      'playwright-report-real',
+      'test-results',
+      'src/*.scaffold.*',
+    ],
+  },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
