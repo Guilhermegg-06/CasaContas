@@ -13,6 +13,9 @@ correções nas versões 11.0.25 e 11.0.26. A propriedade `tomcat.version` passa
 Swagger UI 5.32.11 incorporava DOMPurify 3.4.12, apontado por CVE-2026-75838.
 O gerenciamento da dependência WebJar passa a Swagger UI 5.32.15, versão publicada
 no [Maven Central](https://repo.maven.apache.org/maven2/org/webjars/swagger-ui/5.32.15/).
+`springdoc.swagger-ui.version` recebe a mesma propriedade Maven durante o build,
+para resolver os recursos do WebJar atualizado. O teste de acesso à documentação
+reproduziu a incompatibilidade (500) e passou após esse alinhamento.
 Validar a auditoria novamente e testar `/api-docs` e `/docs`; não pressupor que
 uma troca de versão, sozinha, comprove a correção de todos os achados.
 
