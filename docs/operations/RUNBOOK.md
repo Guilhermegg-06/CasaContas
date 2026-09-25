@@ -29,19 +29,21 @@ Flyway executa migrations antes de o backend receber tráfego. Nunca altere uma 
 
 ## Backup e restauração
 
-```bash
-docker compose exec -T postgres pg_dump -U casacontas -Fc casacontas > casacontas.dump
-docker compose exec -T postgres pg_restore -U casacontas -d casacontas --clean --if-exists < casacontas.dump
-```
-
-A restauração é destrutiva para o banco de destino e exige janela aprovada. Valide primeiro em ambiente isolado.
+Siga [o procedimento de homologação](HOMOLOGACAO.md): interrompa escritas,
+capture o dump com `scripts/database-backup.mjs` e valide a restauração em um
+PostgreSQL novo e isolado. O script preserva o banco original e funciona no
+PowerShell sem redirecionamento de conteúdo binário. Nunca restaure sobre o
+banco em uso nem remova seu volume como parte de uma atualização.
 
 ## Rollback
 
 1. Preserve o banco e colete logs com o correlation ID.
 2. Pare o tráfego da versão defeituosa.
-3. Suba a imagem anterior conhecida pelo mesmo digest.
-4. Não reverta migration incompatível sem plano de dados.
+3. Confirme a compatibilidade da imagem anterior com o schema atual antes de trocar o digest.
+4. A versão anterior à V2 não entende cotas arquivadas; siga o plano de retorno em [HOMOLOGACAO.md](HOMOLOGACAO.md).
 5. Verifique `/actuator/health`, cadastro/login e leitura do painel.
 
-O workflow de publicação de imagens não foi criado enquanto não houver autorização explícita para publicar no GHCR.
+O workflow de publicação de imagens depende dos checks da mesma revisão da
+`main`. Construção de imagens e testes em PR não publicam uma aplicação.
+Provedor, domínio, HTTPS e armazenamento externo de backups continuam pendentes
+para a futura hospedagem. Veja a revisão comprovada em [STATUS.md](../implementation/STATUS.md).
