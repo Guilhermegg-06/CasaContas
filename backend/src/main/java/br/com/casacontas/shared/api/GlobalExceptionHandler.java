@@ -16,11 +16,19 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public final class GlobalExceptionHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  ResponseEntity<ApiErrorResponse> handleNotFound(
+      NoResourceFoundException exception, HttpServletRequest request) {
+    return response(
+        HttpStatus.NOT_FOUND, "NOT_FOUND", "Recurso não encontrado", request, List.of());
+  }
 
   @ExceptionHandler(BusinessException.class)
   ResponseEntity<ApiErrorResponse> handleBusiness(

@@ -1,7 +1,8 @@
 # Contratos P0 verificados na estabilização
 
 O schema OpenAPI é gerado em `/api-docs` e a interface em `/docs` no ambiente de
-desenvolvimento. Homologação desativa esses endpoints pelo Compose específico.
+desenvolvimento. Homologação desativa esses endpoints pelo Compose específico;
+rotas de documentação ausentes retornam 404 com código `NOT_FOUND`.
 Os exemplos manuais permanecem em `examples.http`.
 
 - Convite de morador usa `role: "MEMBER"`; gestores usam `ADMIN`. `RESIDENT` não faz parte do contrato.
