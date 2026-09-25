@@ -5,6 +5,7 @@ Atualizado em 2026-09-25. Evidências valem para a revisão indicada.
 - Objetivo: estabilizar P0 e preparar homologação, sem deploy público/custos.
 - Branch: `fix/estabilizacao-homologacao`; entrega funcional `fc29949`.
 - A consolidação posterior ajusta sincronização do teste de logout e documentação.
+- `3f71ef1` consolida evidências; correção posterior aguarda SQL/TCP antes de restaurar.
 - Base: `3fefc28`; preservar mudanças do usuário em `backend/mvnw.cmd` e `CasaContas/`.
 - Pilar: `docs/requirements/engenharia-de-requisitos.md`.
 - Issue: https://github.com/Guilhermegg-06/CasaContas/issues/12
@@ -42,6 +43,8 @@ Atualizado em 2026-09-25. Evidências valem para a revisão indicada.
 - Logs locais ignorados: backend-final, frontend-verify, disabled-docs-red/green,
   system-resumed, system-final (corrida na fixture de logout) e system-confirmed.
 - Jornada local com logout sincronizado passou (1,8 min); ensaio completo em system-confirmed.
+- system-confirmed revelou inicialização prematura no restore; mesmo dump passou
+  após correção em restore-readiness-green.log. Homologação local em homolog-local-green.log.
 - actionlint-final.log aprovado; frontend-new-tests-lint.log sem erros; Prettier aprovado.
 - Reprodução/correção e distinção de falhas de infraestrutura em TDD_EVIDENCE.md.
 - Novas revisões exigem todos os checks do PR novamente; não inferir aprovação do HEAD.

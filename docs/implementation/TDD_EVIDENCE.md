@@ -22,6 +22,7 @@ Os testes foram executados antes da correção. Logs completos locais ficam em
 | Data UTC diferente da casa | Pendente aparecia vencida | `HouseholdDateIntegrationTest`: detalhe, filtro e painel coerentes |
 | Swagger após atualização do WebJar | 500 | `DocumentationAccessIntegrationTest`: recursos resolvidos com a mesma versão |
 | Documentação desativada na homologação | 500 em `/docs` | `DisabledDocumentationIntegrationTest`: 404 padronizado; Swagger habilitado segue funcionando |
+| Restauração antes do fim da inicialização | Banco de destino ainda não existia | `database-backup.mjs`: consulta real por TCP antes de restaurar; mesmo backup restaurado com sucesso |
 
 Reproduções financeiras usam PostgreSQL e bloqueios reais. Erros iniciais de
 fixture (cache das estatísticas do PostgreSQL), falta de binding nativo no
@@ -29,6 +30,10 @@ verificador Alpine e contenção local foram diagnosticados separadamente; não
 foram contados como defeitos funcionais nem justificaram redução dos gates.
 Na jornada real, o trace mostrou renovação concorrente ao logout ainda em curso;
 o teste passou a aguardar o 204 do logout antes de exigir 401 na renovação.
+O log `system-confirmed.log` reproduziu a corrida de inicialização na restauração;
+`restore-readiness-green.log` confirmou a correção usando o mesmo dump. O servidor
+temporário da imagem usa socket durante a inicialização. `pg_isready` sozinho
+[não comprova a existência do banco](https://www.postgresql.org/docs/17/app-pg-isready.html).
 
 ## Validação executada
 

@@ -134,11 +134,11 @@ export async function verifyRestore(destination) {
         [
           "exec",
           container,
-          "pg_isready",
-          "-U",
-          "postgres",
-          "-d",
-          "casacontas_restore",
+          "sh",
+          "-ceu",
+          // O servidor temporário do entrypoint usa socket antes de criar o banco.
+          // Exigir TCP e uma consulta confirma a inicialização do destino correto.
+          'PGPASSWORD="$POSTGRES_PASSWORD" exec psql -h 127.0.0.1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -X -v ON_ERROR_STOP=1 -Atc "SELECT 1"',
         ],
         { stdio: "ignore" },
       );
