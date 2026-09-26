@@ -1,7 +1,24 @@
-import { describe, expect, it } from 'vitest'
-import { formatCurrency, formatMonth, initials, shiftMonth } from './format'
+import { describe, expect, it, vi } from 'vitest'
+import {
+  formatCurrency,
+  formatMonth,
+  initials,
+  shiftMonth,
+  formatInstant,
+  currentMonth,
+} from './format'
 
 describe('formatadores da interface', () => {
+  it('usa o fuso da casa para o mês e o histórico', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-10-01T01:00:00Z'))
+    try {
+      expect(currentMonth('America/Fortaleza')).toBe('2026-09')
+      expect(formatInstant('2026-10-01T01:00:00Z', 'Asia/Tokyo')).toContain('10:00')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
   it('mostra dinheiro em reais e preserva os centavos', () => {
     expect(formatCurrency(33.34)).toBe('R$ 33,34')
     expect(formatCurrency('100.00')).toBe('R$ 100,00')

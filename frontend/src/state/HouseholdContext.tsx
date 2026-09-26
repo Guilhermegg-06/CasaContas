@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { apiRequest } from '../lib/api'
 import type { Household } from '../types'
+import { useAuth } from './AuthContext'
 
 const ACTIVE_HOUSE_KEY = 'casacontas.active-house'
 
@@ -9,6 +10,8 @@ interface HouseholdContextValue {
   households: Household[]
   activeHousehold: Household | null
   isLoading: boolean
+  error: Error | null
+  retry: () => void
   setActiveHouseholdId: (id: string) => void
   createHousehold: (input: { name: string; timezone: string }) => Promise<Household>
   acceptInvitation: (token: string) => Promise<Household>
@@ -17,10 +20,11 @@ interface HouseholdContextValue {
 const HouseholdContext = createContext<HouseholdContextValue | null>(null)
 
 export function HouseholdProvider({ children }: { children: ReactNode }) {
+  const { session } = useAuth()
   const queryClient = useQueryClient()
   const [activeId, setActiveId] = useState(() => localStorage.getItem(ACTIVE_HOUSE_KEY))
   const householdsQuery = useQuery({
-    queryKey: ['households'],
+    queryKey: ['households', session?.user.id],
     queryFn: () => apiRequest<Household[]>('/api/v1/households'),
   })
   const households = useMemo(() => householdsQuery.data ?? [], [householdsQuery.data])
@@ -56,11 +60,16 @@ export function HouseholdProvider({ children }: { children: ReactNode }) {
     },
   })
 
+  const { isLoading, error, refetch } = householdsQuery
   const value = useMemo<HouseholdContextValue>(
     () => ({
       households,
       activeHousehold,
-      isLoading: householdsQuery.isLoading,
+      isLoading,
+      error,
+      retry: () => {
+        void refetch()
+      },
       setActiveHouseholdId(id) {
         setActiveId(id)
         localStorage.setItem(ACTIVE_HOUSE_KEY, id)
@@ -68,7 +77,7 @@ export function HouseholdProvider({ children }: { children: ReactNode }) {
       createHousehold: (input) => createMutation.mutateAsync(input),
       acceptInvitation: (token) => acceptMutation.mutateAsync(token),
     }),
-    [households, activeHousehold, householdsQuery.isLoading, createMutation, acceptMutation],
+    [households, activeHousehold, isLoading, error, refetch, createMutation, acceptMutation],
   )
 
   return <HouseholdContext.Provider value={value}>{children}</HouseholdContext.Provider>

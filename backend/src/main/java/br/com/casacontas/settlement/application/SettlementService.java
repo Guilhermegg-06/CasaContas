@@ -61,11 +61,11 @@ public class SettlementService {
     }
     String operation = "PRIMARY_PAYMENT";
     String payloadHash = hashes.hash(expenseId + "|" + payerMemberId);
+    Expense expense = requireExpenseForUpdate(householdId, expenseId);
     Settlement repeated = repeated(householdId, userId, operation, idempotencyKey, payloadHash);
     if (repeated != null) {
       return repeated;
     }
-    Expense expense = requireExpenseForUpdate(householdId, expenseId);
     Instant now = clock.instant();
     Expense paid = expense.registerPrimaryPayment(payerMemberId, now);
     expenses.save(paid);
@@ -101,11 +101,11 @@ public class SettlementService {
     HouseholdMember actor = access.requireActiveMember(householdId, userId);
     String operation = "SETTLE_SHARE";
     String payloadHash = hashes.hash(expenseId + "|" + shareId);
+    Expense expense = requireExpenseForUpdate(householdId, expenseId);
     Settlement repeated = repeated(householdId, userId, operation, idempotencyKey, payloadHash);
     if (repeated != null) {
       return repeated;
     }
-    Expense expense = requireExpenseForUpdate(householdId, expenseId);
     ExpenseShare share =
         expense.shares().stream()
             .filter(candidate -> candidate.id().equals(shareId))

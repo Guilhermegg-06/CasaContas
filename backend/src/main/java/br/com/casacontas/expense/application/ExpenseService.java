@@ -9,6 +9,7 @@ import br.com.casacontas.expense.domain.SplitType;
 import br.com.casacontas.household.application.HouseholdAccessService;
 import br.com.casacontas.household.application.HouseholdRepository;
 import br.com.casacontas.household.domain.HouseholdMember;
+import br.com.casacontas.settlement.application.SettlementService;
 import br.com.casacontas.shared.application.AuditPort;
 import br.com.casacontas.shared.application.BusinessException;
 import br.com.casacontas.shared.application.PageResult;
@@ -30,6 +31,7 @@ public class ExpenseService {
   private final HouseholdAccessService access;
   private final AuditPort audit;
   private final Clock clock;
+  private final SettlementService settlements;
   private final SplitCalculator calculator = new SplitCalculator();
 
   public ExpenseService(
@@ -37,12 +39,26 @@ public class ExpenseService {
       HouseholdRepository households,
       HouseholdAccessService access,
       AuditPort audit,
-      Clock clock) {
+      Clock clock,
+      SettlementService settlements) {
     this.expenses = expenses;
     this.households = households;
     this.access = access;
     this.audit = audit;
     this.clock = clock;
+    this.settlements = settlements;
+  }
+
+  @Transactional
+  public Expense create(
+      UUID userId, CreateExpense command, UUID payerMemberId, String idempotencyKey) {
+    Expense expense = create(userId, command);
+    if (payerMemberId != null) {
+      settlements.registerPrimaryPayment(
+          userId, command.householdId(), expense.id(), payerMemberId, idempotencyKey);
+      return detail(userId, command.householdId(), expense.id());
+    }
+    return expense;
   }
 
   @Transactional
@@ -106,13 +122,22 @@ public class ExpenseService {
   @Transactional(readOnly = true)
   public PageResult<Expense> list(UUID userId, ExpenseFilter filter) {
     access.requireActiveMember(filter.householdId(), userId);
+    if (filter.status() != null
+        && !filter.status().isBlank()
+        && !java.util.Set.of("PENDING", "OVERDUE", "SETTLED", "CANCELLED")
+            .contains(filter.status())) {
+      throw new BusinessException(
+          org.springframework.http.HttpStatus.BAD_REQUEST,
+          "INVALID_STATUS",
+          "Informe um status de despesa válido");
+    }
     return expenses.findAll(filter);
   }
 
   @Transactional
   public Expense update(UUID userId, UUID householdId, UUID expenseId, CreateExpense command) {
     HouseholdMember actor = access.requireActiveMember(householdId, userId);
-    Expense current = detail(userId, householdId, expenseId);
+    Expense current = requireForUpdate(householdId, expenseId);
     boolean manager = actor.role().canManageMembers();
     if (!manager && !current.createdByMemberId().equals(actor.id())) {
       throw BusinessException.forbidden("Somente quem criou a despesa ou um gestor pode editá-la");
@@ -168,7 +193,7 @@ public class ExpenseService {
   @Transactional
   public Expense cancel(UUID userId, UUID householdId, UUID expenseId) {
     access.requireManager(householdId, userId);
-    Expense expense = detail(userId, householdId, expenseId).cancel(clock.instant());
+    Expense expense = requireForUpdate(householdId, expenseId).cancel(clock.instant());
     Expense saved = expenses.save(expense);
     appendAudit(userId, saved, "EXPENSE_CANCELLED", "{}");
     return saved;
@@ -188,6 +213,13 @@ public class ExpenseService {
                     .filter(HouseholdMember::active)
                     .orElseThrow(BusinessException::notFound))
         .toList();
+  }
+
+  private Expense requireForUpdate(UUID householdId, UUID expenseId) {
+    return expenses
+        .findByIdForUpdate(expenseId)
+        .filter(expense -> expense.householdId().equals(householdId))
+        .orElseThrow(BusinessException::notFound);
   }
 
   private String normalizeNotes(String notes) {
@@ -219,7 +251,8 @@ public class ExpenseService {
 
     public CreateExpense {
       participantIds = List.copyOf(participantIds);
-      customShares = Map.copyOf(customShares);
+      customShares =
+          java.util.Collections.unmodifiableMap(new java.util.LinkedHashMap<>(customShares));
     }
   }
 }

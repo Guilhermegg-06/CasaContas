@@ -5,12 +5,12 @@ import br.com.casacontas.expense.application.ExpenseRepository;
 import br.com.casacontas.expense.domain.Expense;
 import br.com.casacontas.expense.domain.ExpenseShare;
 import br.com.casacontas.expense.domain.ExpenseStatus;
+import br.com.casacontas.household.application.HouseholdCalendar;
 import br.com.casacontas.shared.application.PageResult;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +29,13 @@ public class JpaExpenseAdapter implements ExpenseRepository {
 
   private final ExpenseJpaRepository expenses;
   private final ExpenseShareJpaRepository shares;
+  private final HouseholdCalendar calendar;
 
-  public JpaExpenseAdapter(ExpenseJpaRepository expenses, ExpenseShareJpaRepository shares) {
+  public JpaExpenseAdapter(
+      ExpenseJpaRepository expenses, ExpenseShareJpaRepository shares, HouseholdCalendar calendar) {
     this.expenses = expenses;
     this.shares = shares;
+    this.calendar = calendar;
   }
 
   @Override
@@ -55,7 +58,7 @@ public class JpaExpenseAdapter implements ExpenseRepository {
     entity.cancelledAt = expense.cancelledAt();
     ExpenseEntity savedExpense = expenses.save(entity);
 
-    List<ExpenseShareEntity> existing = shares.findByExpenseIdOrderById(expense.id());
+    List<ExpenseShareEntity> existing = shares.findByExpenseIdAndActiveTrueOrderById(expense.id());
     Set<UUID> requestedIds =
         expense.shares().stream()
             .map(ExpenseShare::id)
@@ -63,7 +66,8 @@ public class JpaExpenseAdapter implements ExpenseRepository {
     Set<UUID> existingIds =
         existing.stream().map(row -> row.id).collect(java.util.stream.Collectors.toSet());
     if (!existingIds.equals(requestedIds)) {
-      shares.deleteByExpenseId(expense.id());
+      existing.forEach(row -> row.active = false);
+      shares.saveAll(existing);
       shares.flush();
       existing = List.of();
     }
@@ -89,11 +93,12 @@ public class JpaExpenseAdapter implements ExpenseRepository {
 
   @Override
   public PageResult<Expense> findAll(ExpenseFilter filter) {
+    LocalDate today = calendar.today(filter.householdId());
     String sortProperty = ALLOWED_SORTS.contains(filter.sort()) ? filter.sort() : "dueDate";
     Sort.Direction direction = filter.ascending() ? Sort.Direction.ASC : Sort.Direction.DESC;
     PageRequest pageable =
         PageRequest.of(filter.page(), filter.size(), Sort.by(direction, sortProperty));
-    Page<ExpenseEntity> page = expenses.findAll(specification(filter), pageable);
+    Page<ExpenseEntity> page = expenses.findAll(specification(filter, today), pageable);
     return new PageResult<>(
         page.getContent().stream().map(this::withShares).toList(),
         page.getNumber(),
@@ -107,7 +112,7 @@ public class JpaExpenseAdapter implements ExpenseRepository {
     return expenses.hasFinancialMovement(expenseId);
   }
 
-  private Specification<ExpenseEntity> specification(ExpenseFilter filter) {
+  private Specification<ExpenseEntity> specification(ExpenseFilter filter, LocalDate today) {
     return (root, query, builder) -> {
       List<Predicate> predicates = new ArrayList<>();
       predicates.add(builder.equal(root.get("householdId"), filter.householdId()));
@@ -122,16 +127,21 @@ public class JpaExpenseAdapter implements ExpenseRepository {
       if (filter.status() != null && !filter.status().isBlank()) {
         if ("OVERDUE".equals(filter.status())) {
           predicates.add(builder.equal(root.get("status"), ExpenseStatus.PENDING));
-          predicates.add(builder.lessThan(root.get("dueDate"), LocalDate.now(ZoneOffset.UTC)));
+          predicates.add(builder.lessThan(root.get("dueDate"), today));
         } else {
           predicates.add(builder.equal(root.get("status"), ExpenseStatus.valueOf(filter.status())));
+          if ("PENDING".equals(filter.status())) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("dueDate"), today));
+          }
         }
       }
       if (filter.memberId() != null) {
         Subquery<UUID> subquery = query.subquery(UUID.class);
         Root<ExpenseShareEntity> share = subquery.from(ExpenseShareEntity.class);
         subquery.select(share.get("expenseId"));
-        subquery.where(builder.equal(share.get("memberId"), filter.memberId()));
+        subquery.where(
+            builder.equal(share.get("memberId"), filter.memberId()),
+            builder.isTrue(share.get("active")));
         predicates.add(root.get("id").in(subquery));
       }
       return builder.and(predicates.toArray(Predicate[]::new));
@@ -139,7 +149,7 @@ public class JpaExpenseAdapter implements ExpenseRepository {
   }
 
   private Expense withShares(ExpenseEntity entity) {
-    return toDomain(entity, shares.findByExpenseIdOrderById(entity.id));
+    return toDomain(entity, shares.findByExpenseIdAndActiveTrueOrderById(entity.id));
   }
 
   private ExpenseShareEntity toEntity(ExpenseShare share, ExpenseShareEntity current) {

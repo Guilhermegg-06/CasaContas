@@ -18,7 +18,8 @@ import type { MonthlyDashboard, PageResult, Expense } from '../types'
 
 export function DashboardPage() {
   const { activeHousehold } = useHousehold()
-  const [month, setMonth] = useState(currentMonth)
+  const [selectedMonth, setMonth] = useState<string | null>(null)
+  const month = selectedMonth ?? currentMonth(activeHousehold?.timezone)
   const householdId = activeHousehold?.id ?? ''
   const dashboard = useQuery({
     queryKey: ['dashboard', householdId, month],
@@ -47,7 +48,7 @@ export function DashboardPage() {
         <div className="month-control" aria-label="Escolher mês">
           <button
             className="icon-button"
-            onClick={() => setMonth((value) => shiftMonth(value, -1))}
+            onClick={() => setMonth(shiftMonth(month, -1))}
             aria-label="Mês anterior"
           >
             <ArrowLeftIcon />
@@ -55,7 +56,7 @@ export function DashboardPage() {
           <strong>{formatMonth(month)}</strong>
           <button
             className="icon-button"
-            onClick={() => setMonth((value) => shiftMonth(value, 1))}
+            onClick={() => setMonth(shiftMonth(month, 1))}
             aria-label="Próximo mês"
           >
             <ArrowRightIcon />

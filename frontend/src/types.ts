@@ -1,4 +1,4 @@
-export type Role = 'OWNER' | 'ADMIN' | 'RESIDENT'
+export type Role = 'OWNER' | 'ADMIN' | 'MEMBER'
 export type SplitType = 'EQUAL' | 'CUSTOM'
 export type ExpenseStatus = 'PENDING' | 'OVERDUE' | 'SETTLED' | 'CANCELLED'
 export type ShareStatus = 'PENDING' | 'COVERED' | 'SETTLED'

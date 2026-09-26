@@ -27,6 +27,9 @@ class ExpenseShareEntity {
   @Column(nullable = false, precision = 19, scale = 2)
   BigDecimal amount;
 
+  @Column(nullable = false)
+  boolean active = true;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 16)
   ShareStatus status;

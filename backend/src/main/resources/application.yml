@@ -29,6 +29,7 @@ management:
 springdoc:
   api-docs.path: /api-docs
   swagger-ui.path: /docs
+  swagger-ui.version: '@swagger-ui.version@'
 casacontas:
   security:
     jwt-secret: ${JWT_SECRET:local-development-secret-change-this-32-bytes}

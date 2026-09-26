@@ -1,6 +1,9 @@
 # Plano de execução do MVP
 
-Atualizado em 2026-08-27. A marcação reflete evidência executada, não intenção.
+Registro histórico do MVP em 2026-08-27. As marcações abaixo não aprovam a
+revisão atual. A estabilização, as correções de concorrência, os testes reais e
+o estado do GitHub são acompanhados em [STATUS.md](STATUS.md) e
+[TDD_EVIDENCE.md](TDD_EVIDENCE.md).
 
 ## Gate 0 — fundação e governança
 
@@ -51,4 +54,6 @@ Atualizado em 2026-08-27. A marcação reflete evidência executada, não inten�
 - [ ] criar labels, milestone, issues e draft PR.
 - [ ] configurar proteção de `main` após os checks existirem no remoto.
 
-Os quatro itens externos aguardam confirmação explícita do proprietário. Nenhuma branch foi mesclada automaticamente.
+As pendências históricas de envio e criação de PR foram substituídas pelo
+acompanhamento atual no registro de continuidade. Nenhuma branch desta
+estabilização foi mesclada automaticamente.

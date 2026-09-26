@@ -31,9 +31,11 @@ public record Expense(
   }
 
   public Expense registerPrimaryPayment(UUID payerMemberId, Instant instant) {
-    if (status != ExpenseStatus.PENDING || paidByMemberId != null) {
+    if (status != ExpenseStatus.PENDING
+        || paidByMemberId != null
+        || shares.stream().anyMatch(share -> share.status() != ShareStatus.PENDING)) {
       throw new FinancialRuleException(
-          "O pagamento principal já foi registrado ou a despesa não está pendente");
+          "O pagamento principal exige uma despesa pendente sem pagamentos individuais");
     }
     List<ExpenseShare> updatedShares = new ArrayList<>(shares.size());
     for (ExpenseShare share : shares) {
@@ -50,6 +52,9 @@ public record Expense(
   }
 
   public Expense settleShare(UUID shareId, Instant instant) {
+    if (status != ExpenseStatus.PENDING) {
+      throw new FinancialRuleException("Somente despesas pendentes podem receber pagamentos");
+    }
     List<ExpenseShare> updatedShares =
         shares.stream()
             .map(share -> share.id().equals(shareId) ? share.settle(instant) : share)

@@ -1,16 +1,7 @@
 name: Publicação das imagens
 
 on:
-  push:
-    branches:
-      - main
-      - docs/entrega-mvp
-    paths:
-      - backend/**
-      - frontend/**
-      - compose.yaml
-      - .github/workflows/publicacao-imagens.yml
-  workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read

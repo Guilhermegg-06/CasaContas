@@ -49,7 +49,16 @@ export function MembersPage() {
         )}
       </header>
 
-      {members.isLoading ? (
+      {removeMember.error && (
+        <div className="inline-error" role="alert">
+          {removeMember.error.message}
+        </div>
+      )}
+      {members.isError ? (
+        <div className="inline-error" role="alert">
+          {members.error.message}
+        </div>
+      ) : members.isLoading ? (
         <div className="member-grid">
           {Array.from({ length: 3 }, (_, index) => (
             <div className="skeleton" key={index} />
@@ -68,6 +77,7 @@ export function MembersPage() {
                   <button
                     className="icon-button"
                     aria-label={`Remover ${member.name}`}
+                    disabled={removeMember.isPending}
                     onClick={() => removeMember.mutate(member.id)}
                   >
                     <TrashIcon />
@@ -84,7 +94,7 @@ export function MembersPage() {
 }
 
 function InviteModal({ householdId, onClose }: { householdId: string; onClose: () => void }) {
-  const [role, setRole] = useState<Role>('RESIDENT')
+  const [role, setRole] = useState<Role>('MEMBER')
   const [invitation, setInvitation] = useState<Invitation | null>(null)
   const [error, setError] = useState<string | null>(null)
   const invite = useMutation({
@@ -94,7 +104,7 @@ function InviteModal({ householdId, onClose }: { householdId: string; onClose: (
         body: JSON.stringify({ role, validityHours: 72 }),
       }),
     onSuccess: setInvitation,
-    onError: () => setError('Não foi possível gerar o convite.'),
+    onError: (failure) => setError(failure.message),
   })
 
   function submit(event: SyntheticEvent<HTMLFormElement>) {
@@ -138,7 +148,7 @@ function InviteModal({ householdId, onClose }: { householdId: string; onClose: (
             <label className="field">
               <span>Papel na casa</span>
               <select value={role} onChange={(event) => setRole(event.target.value as Role)}>
-                <option value="RESIDENT">Morador</option>
+                <option value="MEMBER">Morador</option>
                 <option value="ADMIN">Administrador</option>
               </select>
             </label>
