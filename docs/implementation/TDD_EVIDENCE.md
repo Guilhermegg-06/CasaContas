@@ -3,6 +3,19 @@
 Atualizado em 2026-09-25. O estado e a revisão final estão em [STATUS.md](STATUS.md).
 Resultados históricos do MVP não aprovam alterações posteriores.
 
+## Preparação Render/Neon/Vercel
+
+- `deploy-config-red.log`: dois testes falharam porque a configuração não respeitava PORT.
+  `deploy-config-green.log`: porta, pool de cinco e perfil TLS aprovados.
+- `deploy-api-red.log`: VITE_API_URL com barra final gerava //api nas chamadas e no refresh.
+  Corrigida a normalização; `deploy-frontend-green.log`: lint, Prettier, 21 testes e build aprovados.
+- `deploy-render-local.log`: backend na porta 10000, PostgreSQL com TLS real e certificado
+  verificado, conexões limitadas, CORS exato, cadastro e healthcheck 200/503 aprovados.
+- `deploy-actionlint.log`: workflows aprovados. A revisão automática recusou montar todo
+  o repositório; a validação usou somente os YAMLs em montagem isolada, sem rede.
+- O ensaio não usa Neon real nem configura painéis. URLs, credenciais e aprovação do CI
+  da branch de deploy devem ser conferidas no registro de continuidade e no PR.
+
 ## Reproduções desta estabilização
 
 Os testes foram executados antes da correção. Logs completos locais ficam em

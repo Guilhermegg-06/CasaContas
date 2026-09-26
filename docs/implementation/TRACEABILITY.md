@@ -29,6 +29,7 @@ Os itens P1/P2 não foram misturados ao MVP e permanecem no [`BACKLOG.md`](BACKL
 | Persistência incremental | `MigrationUpgradeTest`: banco V1 com dados sintéticos atualizado para V2, sem perda de linhas ou auditoria |
 | RF-001 a RF-044 P0, RN-007 a RN-013 | `system.spec.ts`: jornada real, repetição sem duplicação, outra casa recusada e reinício preservando volume |
 | Operação de homologação | `test-homolog.mjs`, `DisabledDocumentationIntegrationTest` e `database-backup.mjs`: configuração, rotas desativadas e restauração isolada |
+| RNF-004, RNF-014/015, RNF-023 | Perfil render, Blueprint sem valores secretos, `DeploymentConfigurationTest`, `api.deployment.test.ts` e `test-render.mjs`: porta, TLS, CORS e saúde do banco; ADR 0005 |
 
 Os Playwright originais (`critical-flow.spec.ts`) simulam a API. Testes Spring usam
 PostgreSQL real. A jornada `system.spec.ts` usa navegador, API e PostgreSQL reais;
