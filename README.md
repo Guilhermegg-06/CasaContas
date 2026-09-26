@@ -42,6 +42,10 @@ de branches não são evidência de aprovação atual.
 
 ## Verificar
 
+Para o ambiente de teste em Render, Neon e Vercel, siga a
+[configuração por provedor](docs/operations/RENDER-NEON-VERCEL.md).
+As credenciais reais pertencem exclusivamente aos segredos do Render.
+
 ```bash
 make verify
 make test-e2e
