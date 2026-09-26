@@ -3,7 +3,9 @@
 Atualizado em 2026-09-25 (horário local). Evidências valem para a revisão indicada.
 
 - Objetivo atual: preparar Render/Neon/Vercel, validar CI e promover para main somente verde.
-- Branch: `deploy/ambiente-teste`; base `7ffccc7`; commits de configuração `0f8aaa3`/`aaa2640`.
+- Branch: `deploy/ambiente-teste`; base `7ffccc7`; revisão funcional `4af0105`.
+- PR: https://github.com/Guilhermegg-06/CasaContas/pull/14 (checks e registro final de promoção).
+- Commits: `0f8aaa3` (Render/TLS), `aaa2640` (Vercel/API), `4af0105` (ensaio e documentação).
 - PR #13 da estabilização já integrado; main local/remota conferidas e CI aprovado:
   https://github.com/Guilhermegg-06/CasaContas/actions/runs/36210428507
 - Preservar mudanças do usuário em `backend/mvnw.cmd` e pasta não rastreada `CasaContas/`.
@@ -38,9 +40,9 @@ Atualizado em 2026-09-25 (horário local). Evidências valem para a revisão ind
 - Teste sintético local/CI não comprova a conexão com uma instância Neon real.
 
 ## Próximo passo
-- Ensaio TLS concluído; enviar commits e criar PR para main.
-- Aguardar todos os checks da revisão; corrigir na branch se necessário.
-- Após CI verde, merge autorizado e atualização local por fast-forward, preservando trabalho.
+- Ensaio TLS concluído, commits enviados e PR #14 criado.
+- Regra de promoção: todos os checks do SHA enviado devem passar; corrigir na branch se necessário.
+- Merge autorizado após CI verde; SHA e evidência final serão registrados no PR, preservando trabalho local.
 - Configurar os painéis quando os acessos e endereços indispensáveis estiverem disponíveis.
 
 ## Continuidade da estabilização
