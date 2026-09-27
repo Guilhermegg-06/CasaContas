@@ -1,66 +1,56 @@
-# Continuidade — estabilização para homologação
+# Continuidade — ambiente de teste Render/Neon/Vercel
 
-Atualizado em 2026-09-25. Evidências valem para a revisão indicada.
+Atualizado em 2026-09-25 (horário local). Evidências valem para a revisão indicada.
 
-- Objetivo: estabilizar P0 e preparar homologação, sem deploy público/custos.
-- Branch: `fix/estabilizacao-homologacao`; entrega funcional `fc29949`.
-- A consolidação posterior ajusta sincronização do teste de logout e documentação.
-- `3f71ef1` consolida evidências; correção posterior aguarda SQL/TCP antes de restaurar.
-- Base: `3fefc28`; preservar mudanças do usuário em `backend/mvnw.cmd` e `CasaContas/`.
-- Pilar: `docs/requirements/engenharia-de-requisitos.md`.
-- Issue: https://github.com/Guilhermegg-06/CasaContas/issues/12
-- PR/checks da revisão atual: https://github.com/Guilhermegg-06/CasaContas/pull/13
+- Objetivo atual: preparar Render/Neon/Vercel, validar CI e promover para main somente verde.
+- Branch: `deploy/ambiente-teste`; base `7ffccc7`; revisão funcional `4af0105`.
+- PR: https://github.com/Guilhermegg-06/CasaContas/pull/14 (checks e registro final de promoção).
+- Commits: `0f8aaa3` (Render/TLS), `aaa2640` (Vercel/API), `4af0105` (ensaio e documentação).
+- PR #13 da estabilização já integrado; main local/remota conferidas e CI aprovado:
+  https://github.com/Guilhermegg-06/CasaContas/actions/runs/36210428507
+- Preservar mudanças do usuário em `backend/mvnw.cmd` e pasta não rastreada `CasaContas/`.
+- Pilar: docs/requirements/engenharia-de-requisitos.md; somente P0.
+- Usuário autorizou push da branch, acompanhamento/correção do CI e merge após aprovação.
 
-## Concluído
-- Maven Wrapper 100755/LF; publicação depende dos checks da mesma revisão.
-- CodeQL integrado ao workflow obrigatório; execução semanal/manual preservada.
-- Auditoria NVD obrigatória recuperada, sem reduzir gates ou suprimir CVEs.
-- Tomcat 11.0.26 e Swagger UI 5.32.15; versão do WebJar alinhada ao Springdoc.
-- Sessão: refresh compartilhado, logout não restaura sessão e cache separado por usuário.
-- Interface preservada: contrato MEMBER, erros/retry, detalhe atualizado e fuso da casa.
-- Finanças: criação/pagamento atômicos; bloqueio antes de idempotência/edição/cancelamento.
-- Canceladas recusam pagamento; pagamento principal não sobrepõe confirmação individual.
-- V2 preserva cotas antigas e restringe duplicações; V1 intacta.
-- BigDecimal/NUMERIC(19,2), centavos sem overflow e validação antes de persistir.
-- Detalhe, filtros e painel usam a data da casa; status inválido recebe 400.
-- Documentação desativada retorna 404; Swagger habilitado segue funcionando.
-- Jornada real obrigatória no CI, sem interceptações e com banco/volume próprios.
-- Compose de homologação, exemplos sem segredos, portas privadas e rotação de logs.
-- Backup binário e restauração isolada com comparação das 11 tabelas.
-- ADR 0004, contratos, rastreabilidade, README e runbooks consolidados.
+## Implementado nesta etapa
+- Spring usa `${PORT:8080}`; pool Hikari padrão 5, com mínimo ocioso 1.
+- Perfil render: JDBC com TLS verify-full/CA do Java, segredos/origem sem fallback local.
+- Render Blueprint: Docker backend, plano gratuito, checksPass e /actuator/health.
+- Quatro segredos referenciados por sync:false; nenhum valor real versionado.
+- Vercel: frontend/vercel.json com fallback para React e guia de VITE_API_URL.
+- Cliente normaliza barra final de VITE_API_URL também nas chamadas de refresh.
+- Ensaio de CI com PostgreSQL TLS real, PORT=10000, CORS exato e saúde 200/503.
+- Guia operacional: docs/operations/RENDER-NEON-VERCEL.md.
 
-## Evidências
-- CI completo de `fc29949`: https://github.com/Guilhermegg-06/CasaContas/actions/runs/36180856299
-- CodeQL: https://github.com/Guilhermegg-06/CasaContas/actions/runs/36180856029
-- Backend no CI: 32 testes, zero falhas/erros/ignorados; JaCoCo/SpotBugs aprovados.
-- PIT: 47/52 mutações detectadas (90%); cobertura das classes mutadas 86%.
-- Frontend: lint, Prettier, 19 testes e build; auditorias npm/NVD aprovadas.
-- Playwright com API simulada: desktop/celular aprovados; não comprova integração real.
-- Jornada real no CI: 35,4 s; moradores, 100/3, divisões, edição, pagamentos e reembolso,
-  repetição, refresh/logout/login, cancelamento, filtros, isolamento e reinício com volume.
-- CI comprovou restauração, configuração de homologação, CORS, saúde, migrations e portas.
-- MigrationUpgradeTest: V1 com dados → V2, preservando valores/auditoria e reaplicação vazia.
-- FinancialIntegrationTest: oito testes, com concorrência coordenada por bloqueios reais.
-- Logs locais ignorados: backend-final, frontend-verify, disabled-docs-red/green,
-  system-resumed, system-final (corrida na fixture de logout) e system-confirmed.
-- Jornada local com logout sincronizado passou (1,8 min); ensaio completo em system-confirmed.
-- system-confirmed revelou inicialização prematura no restore; mesmo dump passou
-  após correção em restore-readiness-green.log. Homologação local em homolog-local-green.log.
-- Ensaio local de homologação aprovado após o 404: saúde, cadastro, CORS, migrations e portas.
-- actionlint-final.log aprovado; frontend-new-tests-lint.log sem erros; Prettier aprovado.
-- Reprodução/correção e distinção de falhas de infraestrutura em TDD_EVIDENCE.md.
-- Novas revisões exigem todos os checks do PR novamente; não inferir aprovação do HEAD.
+## Evidências locais
+- deploy-config-red.log: configuração de PORT ausente; dois testes falharam antes da mudança.
+- deploy-config-green.log: dois testes de porta/pool/TLS/configuração aprovados.
+- deploy-api-red.log: URL com barra final gerava //api; regressão reproduzida.
+- deploy-frontend-green.log: lint, Prettier, 21 testes em sete arquivos e build aprovados.
+- deploy-actionlint.log: aprovado com apenas workflows isolados e rede desativada.
+- deploy-render-local.log aprovado: TLS real, porta 10000, CORS e healthcheck 200/503.
+- Falta inicial de Docker e ajuste de formatação não foram contados como defeitos funcionais.
 
-## Commits e próximos passos
-- `46ebf3f`: sessão/interface; `0d6c8d6`: integridade financeira e histórico.
-- `852dc37`: 404; `26b1c61`: operação/restore; `fc29949`: jornada real/gate de publicação.
-- Revisar PR #13 e seus checks finais antes de merge; nenhuma alteração direta na main.
-- Preparação técnica comprovada; deploy aguarda provedor, domínio/TLS, disco persistente,
-  backups externos, monitoramento e responsáveis, conforme docs/operations/HOMOLOGACAO.md.
-- Retorno à versão anterior à V2 é incompatível após edição: usar imagem compatível
-  ou restauração em volume novo com reconciliação. Nunca fazer downgrade/limpeza automática.
-- Main sem proteção; configurar checks obrigatórios antes de uso real.
-- Dependabot #1/#4/#5/#6/#7/#8/#11 permanece para avaliação de compatibilidade própria.
-- Host Java 8/26: backend validado com Java 21 no Docker; CI usa Node 22.20.0.
-- GitHub escrito por REST com credencial Git local; conector recusou escritas (403).
-- Volumes dos ensaios locais foram preservados; nenhum dado real usado ou apagado.
+## Bloqueio externo
+- URLs reais de backend/frontend e nomes dos serviços ainda não fornecidos.
+- Sem CLI/credenciais Render/Vercel/Neon e sem navegador conectado disponível.
+- Perguntas enviadas sobre URLs e cadastro/acesso aos segredos; não solicitar valores no chat.
+- Cadastro real dos quatro segredos no Render e VITE_API_URL/CORS nos painéis não executado.
+- Nenhum recurso contratado, deploy público realizado ou banco Neon acessado.
+- Teste sintético local/CI não comprova a conexão com uma instância Neon real.
+
+## Próximo passo
+- Ensaio TLS concluído, commits enviados e PR #14 criado.
+- Regra de promoção: todos os checks do SHA enviado devem passar; corrigir na branch se necessário.
+- Merge autorizado após CI verde; SHA e evidência final serão registrados no PR, preservando trabalho local.
+- Configurar os painéis quando os acessos e endereços indispensáveis estiverem disponíveis.
+
+## Continuidade da estabilização
+- PR/issue anteriores: https://github.com/Guilhermegg-06/CasaContas/pull/13 e issues/12.
+- V1 intacta; V2 arquiva cotas e restringe duplicações. Não retornar à imagem anterior
+  após edição com V2 sem plano de restauração/reconciliação (ADR 0004).
+- Base: 32 testes backend, 19 frontend, duas jornadas simuladas e uma real aprovados.
+- Concorrência financeira, migrations V1→V2, reinício e backup/restauração comprovados.
+- Main sem proteção; Dependabot pendente permanece fora do escopo deste ambiente.
+- Host Java 8/26: backend validado em Docker Java 21; CI usa Node 22.20.0.
+- GitHub: REST com credencial Git local; conector recusou escritas anteriormente.

@@ -123,6 +123,27 @@ jobs:
             .data/evidence/*/homolog-result.json
             .data/evidence/*/homolog-services.log
 
+  ambiente-teste:
+    name: Render — porta, TLS e CORS
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22.20.0"
+      - name: Validar perfil Render com PostgreSQL TLS isolado
+        run: node scripts/test-render.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ensaio-render
+          include-hidden-files: true
+          path: |
+            .data/evidence/casacontas-render-test-*/result.txt
+            .data/evidence/casacontas-render-test-*/services.log
+            .data/evidence/casacontas-render-test-*/command-error.log
+
   imagens:
     name: Imagens Docker
     runs-on: ubuntu-latest
@@ -145,7 +166,7 @@ jobs:
 
   publicar:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [backend, frontend, navegador, integracao, imagens, seguranca, codeql]
+    needs: [backend, frontend, navegador, integracao, ambiente-teste, imagens, seguranca, codeql]
     permissions:
       contents: read
       packages: write

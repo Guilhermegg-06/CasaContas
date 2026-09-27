@@ -1,7 +1,7 @@
 import type { ApiErrorBody, AuthSession } from '../types'
 
 const SESSION_KEY = 'casacontas.session'
-const API_URL = import.meta.env.VITE_API_URL ?? window.location.origin
+const API_URL = (import.meta.env.VITE_API_URL ?? window.location.origin).replace(/\/+$/, '')
 
 let currentSession = readStoredSession()
 let pendingRefresh: { source: AuthSession; promise: Promise<AuthSession | null> } | null = null
