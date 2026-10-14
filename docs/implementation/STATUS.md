@@ -3,7 +3,8 @@
 Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicados.
 
 - Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
-- Trabalho isolado em `.data/achievements-work`; branch `fix/auditoria-backend`.
+- Trabalho isolado em `.data/achievements-work`; branch `test/convites-concorrencia`.
+- Commit backend: `e2234f0`; branch de convites depende dele.
 - Commit frontend: `fb3b1a0`; backend depende dessa branch para auditoria JavaScript verde.
 - Base: `2063ed054099e78189b26ffff87aa5b928129f39`, main local/remota na auditoria.
 - O usuário autorizou implementar as cinco melhorias e fazer os commits em um fork.
@@ -30,6 +31,9 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - Encerramento do JVM de testes excedeu 30 s neste host; o build completo terminou com saída 0.
 - Auditoria real backend aprovada em Java 21, em 29 min, com zero achados em 78 dependências.
 - CVSS 7 preservado; relatórios em `.data/evidence/backend-audit-result` e `backend-audit-real.log`.
+- Convites: dois testes novos com API/PostgreSQL real passaram; um único vencedor
+  concorrente persistido e recusa de convite expirado sem consumo/vínculo.
+- Suíte completa/mutação aprovadas: 36 testes; 47/52 mutações eliminadas (90%), força 98%.
 - Pull Shark e YOLO confirmados no perfil público, inclusive detalhes dos eventos.
   https://github.com/Guilhermegg-06
 - Outras conquistas não confirmadas; não atribuir coautoria sem participação humana real.
@@ -46,7 +50,7 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 1. Frontend validado e commit local criado; publicar quando o fork estiver disponível.
 2. Backend validado; registrar commit local, sem aprovação remota presumida.
    O feed retornou 200 nesta sessão; não presumir URL permanentemente inválida.
-3. Cobrir convites concorrentes/expirados na API com PostgreSQL isolado.
+3. Convites e suíte completa validados; registrar commit local.
 4. Atualizar CONTRIBUTING, checklist de conquistas e orientação de coautoria.
 5. Acrescentar screenshots reais com dados sintéticos e exemplos ao README.
 - Usar branches específicas; registrar dependências quando uma entrega usar outra.

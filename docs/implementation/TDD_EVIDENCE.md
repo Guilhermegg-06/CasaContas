@@ -5,6 +5,12 @@ Resultados históricos do MVP não aprovam alterações posteriores.
 
 ## Contribuições em fork — auditorias
 
+Os testes de `InvitationLifecycleIntegrationTest` acrescentam evidência de RF-012
+pela API e PostgreSQL real: apenas um aceite concorrente cria vínculo, o vencedor
+fica persistido e a repetição não altera moradores. Um convite expirado é recusado
+sem consumo ou vínculo novo. Os dois cenários passaram na implementação existente;
+são cobertura adicional, sem alegar descoberta de um defeito ou alterar código de produção.
+
 - Frontend: `npm audit` reproduziu quatro alertas altos com saída 1. Após correções
   transitivas direcionadas, instalação limpa/auditoria em Node 22.20.0 passaram;
   lint, formatação, 21 testes, build e duas jornadas com API simulada passaram.
