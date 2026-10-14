@@ -2,15 +2,60 @@ import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { expect, test, type Page } from '@playwright/test'
 import type { AuthSession, Expense, Member, MonthlyDashboard } from '../src/types.js'
+import { currentMonth, formatMonth, shiftMonth } from '../src/lib/format.js'
 
 const password = 'Senha-sintetica-123!'
+
+async function captureDemo(page: Page, expenseId: string, timeZone: string) {
+  const viewport = page.viewportSize()
+  try {
+    await page.setViewportSize({ width: 1536, height: 960 })
+    const detail = test.info().outputPath('demo-expense.png')
+    await page.screenshot({ path: detail, fullPage: true, animations: 'disabled' })
+    await test.info().attach('Despesa real com dados sintéticos', {
+      path: detail,
+      contentType: 'image/png',
+    })
+    await page.goto('/app')
+    await expect(page.getByRole('heading', { name: 'Visão geral', exact: true })).toBeVisible()
+    let month = currentMonth(timeZone)
+    const [year, number] = month.split('-').map(Number)
+    const difference = (year - 2026) * 12 + number - 9
+    const direction = difference > 0 ? -1 : 1
+    for (let index = 0; index < Math.abs(difference); index++) {
+      await page
+        .getByRole('button', { name: direction < 0 ? 'Mês anterior' : 'Próximo mês' })
+        .click()
+      month = shiftMonth(month, direction)
+      await expect(page.locator('.month-control strong')).toHaveText(formatMonth(month))
+    }
+    await expect(
+      page.getByRole('region', { name: 'Resumo mensal' }).getByText(/R\$\s*100,00/),
+    ).toBeVisible()
+    const dashboard = test.info().outputPath('demo-dashboard.png')
+    await page.screenshot({ path: dashboard, fullPage: true, animations: 'disabled' })
+    await test.info().attach('Painel real com dados sintéticos', {
+      path: dashboard,
+      contentType: 'image/png',
+    })
+  } finally {
+    if (viewport) await page.setViewportSize(viewport)
+    await page.goto('/app/despesas/' + expenseId)
+    await expect(page.getByRole('heading', { name: 'Energia revisada', exact: true })).toBeVisible()
+  }
+}
 
 async function register(page: Page, name: string, email: string) {
   await page.goto('/cadastro')
   await page.getByLabel(/nome/i).fill(name)
   await page.getByLabel('E-mail').fill(email)
   await page.getByLabel('Senha', { exact: true }).fill(password)
+  const created = page.waitForResponse(
+    (response) =>
+      response.url().endsWith('/auth/register') && response.request().method() === 'POST',
+  )
   await page.getByRole('button', { name: 'Criar minha conta' }).click()
+  expect((await created).status()).toBe(201)
   await expect(page.getByRole('heading', { name: 'Qual casa vamos organizar?' })).toBeVisible()
 }
 
@@ -52,7 +97,7 @@ test('jornada P0 com navegador, API e PostgreSQL reais, incluindo reinício', as
   await page.getByLabel('Nome da casa').fill('Casa de Teste')
   await page.getByRole('button', { name: 'Criar casa', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Visão geral' })).toBeVisible()
-  const house = (await read<{ id: string }[]>(page, '/api/v1/households'))[0]
+  const house = (await read<{ id: string; timezone: string }[]>(page, '/api/v1/households'))[0]
   const base = `/api/v1/households/${house.id}`
 
   const contextOptions = { baseURL: new URL(page.url()).origin }
@@ -144,6 +189,7 @@ test('jornada P0 com navegador, API e PostgreSQL reais, incluindo reinício', as
     const dashboardUrl = `${base}/dashboard?month=2026-09`
     const before = await read<MonthlyDashboard>(page, dashboardUrl)
     expect(before.iReceive).toBeCloseTo(100 - ownerShare, 2)
+    await captureDemo(page, expenseId, house.timezone)
 
     const bruno = residents[0]
     await bruno.goto(`/app/despesas/${expenseId}`)

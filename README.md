@@ -14,6 +14,52 @@ O MVP P0 está implementado e passa por estabilização da integração e prepar
 - interface responsiva para desktop e celular;
 - PostgreSQL real, Flyway, OpenAPI, métricas, Docker e CI.
 
+## Um exemplo de uso
+
+Alice, Bruno e Caio dividem uma despesa de R$ 100,00. A divisão igual preserva
+o total: R$ 33,34 + R$ 33,33 + R$ 33,33. Ao registrar quem pagou a conta principal,
+o sistema acompanha as partes e os reembolsos sem repetir confirmações.
+
+As telas abaixo são capturas da aplicação executada com navegador, API e
+PostgreSQL reais em ambiente local isolado. Todos os moradores e valores são
+dados sintéticos de teste; o exemplo usa setembro de 2026.
+
+![Painel mensal com total da casa, partes pagas, pendências e reembolso a receber](docs/screenshots/dashboard.png)
+
+![Despesa dividida entre três moradores, com pagamento principal e partes individuais](docs/screenshots/expense.png)
+
+Para reproduzir as capturas, com Docker ativo, dependências frontend instaladas
+e Chromium do Playwright disponível:
+
+```powershell
+node scripts/capture-demo.mjs
+```
+
+O comando executa a jornada completa, verifica reinício e restauração em banco
+isolado e só então atualiza as imagens. No CI, as mesmas capturas fazem parte
+do relatório da jornada real. O teste mantém seu volume sintético; não usa Neon
+nem registros de usuários reais.
+
+## Tecnologias e fluxo
+
+O frontend usa React e TypeScript; a API é um monólito modular em Java 21/Spring
+Boot, com Maven. PostgreSQL/Flyway persistem os registros e o histórico.
+Render, Neon e Vercel são a topologia preparada para homologação.
+
+```mermaid
+flowchart LR
+  UI["React / TypeScript"] -->|API JSON + autenticação| API["Spring Boot / Java 21"]
+  API --> MOD["Módulos: identidade, casas, despesas e liquidações"]
+  MOD --> DB[("PostgreSQL / Flyway")]
+  DB --> MOD
+  MOD --> API
+  API --> UI
+```
+
+A [arquitetura detalhada](docs/architecture/README.md) explica camadas, contratos
+e decisões. Testes locais ou screenshots não aprovam automaticamente o ambiente
+público; confira o [registro da revisão](docs/implementation/STATUS.md).
+
 ## Rodar com Docker
 
 Pré-requisito: Docker Desktop com Compose v2.
@@ -90,6 +136,10 @@ install chromium` nessa pasta. O volume de teste permanece após a execução.
 - `.github/`: templates, Dependabot e workflows.
 
 Leia primeiro a [arquitetura](docs/architecture/README.md), a [rastreabilidade](docs/implementation/TRACEABILITY.md) e o [runbook](docs/operations/RUNBOOK.md). A [preparação de homologação](docs/operations/HOMOLOGACAO.md) descreve configuração, backup, restauração e limites de retorno entre versões.
+
+Para contribuir, siga [CONTRIBUTING.md](CONTRIBUTING.md). O
+[checklist de conquistas e colaboração](docs/implementation/ACHIEVEMENTS.md)
+acompanha contribuições legítimas e evidências, sem substituir a revisão ou o CI.
 
 ## Evidências de qualidade
 

@@ -3,7 +3,7 @@
 Atualizado em 2026-10-14. O estado e a revisão final estão em [STATUS.md](STATUS.md).
 Resultados históricos do MVP não aprovam alterações posteriores.
 
-## Contribuições em fork — auditorias
+## Contribuições — auditorias, convites e apresentação
 
 Os testes de `InvitationLifecycleIntegrationTest` acrescentam evidência de RF-012
 pela API e PostgreSQL real: apenas um aceite concorrente cria vínculo, o vencedor
@@ -23,6 +23,14 @@ são cobertura adicional, sem alegar descoberta de um defeito ou alterar código
   incorpora DOMPurify 3.4.16; 34 testes, cobertura, SpotBugs e Actionlint passaram.
 - Evidências completas: `.data/evidence/frontend-*`, `backend-audit-retry-*`,
   `backend-swagger-verify.log`, `backend-audit-real.log` e `backend-audit-result/`.
+- Jornada real: o cadastro falhou na expectativa de navegação enquanto o POST ainda
+  estava pendente; a sincronização passou a exigir resposta 201 antes da próxima tela.
+  A jornada completa passou depois desse ajuste, sem interceptar API ou aumentar timeouts:
+  divisão de centavos, permissões, pagamentos, reembolso, repetição e reinício.
+- `node scripts/capture-demo.mjs` terminou com saída 0; restauração preservou todas as
+  linhas/valores/históricos e o ensaio de homologação passou. As duas imagens de 1536×960
+  foram inspecionadas: somente dados sintéticos, sem tokens. Lint/formatação passaram.
+  Logs: `demo-capture-retry.log` (reprodução) e `demo-capture-verified.log` (aprovado).
 - São resultados locais da cópia isolada. O fork e os checks remotos desta entrega
   ainda dependem da conta/organização de destino; nenhum merge foi executado.
 

@@ -1,9 +1,11 @@
-# Continuidade — contribuições legítimas em fork
+# Continuidade — contribuições legítimas
 
 Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicados.
 
 - Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
-- Trabalho isolado em `.data/achievements-work`; branch `docs/continuidade-colaboracao`.
+- Trabalho isolado em `.data/achievements-work`; branch `docs/apresentacao`.
+- Commit colaboração: `0dadbaa`; apresentação depende das quatro branches anteriores.
+- Apresentação validada; cinco commits locais concluídos, destino online ainda pendente.
 - Commit convites: `b89015f`; documentação depende dele, de `e2234f0` e `fb3b1a0`.
 - Commit backend: `e2234f0`; branch de convites depende dele.
 - Commit frontend: `fb3b1a0`; backend depende dessa branch para auditoria JavaScript verde.
@@ -38,22 +40,24 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - Pull Shark e YOLO confirmados no perfil público, inclusive detalhes dos eventos.
   https://github.com/Guilhermegg-06
 - Outras conquistas não confirmadas; não atribuir coautoria sem participação humana real.
+- README com duas capturas reais de 1536×960, inspecionadas, apenas dados sintéticos.
+- Jornada real passou: centavos, isolamento, pagamentos/reembolso, repetição e reinício.
+- Backup restaurado preservou linhas, valores e históricos; ensaio de homologação passou.
+- `node scripts/capture-demo.mjs`: saída 0; lint/formatação da jornada aprovados.
+- Cadastro sincronizado com resposta 201; log `demo-capture-verified.log` comprova resultado.
 
 ## Bloqueio do fork
 - Conta do conector e credencial Git: Guilhermegg-06, proprietária do original.
 - POST de fork com nome diferente retornou o original, com `fork=false`.
-- Não há forks existentes. O original não será tratado como fork nem receberá pushes.
-- Pergunta enviada: organização existente autorizada ou URL de fork em outra conta.
+- Não há fork confirmado. O original não será tratado como fork.
+- Usuário pediu publicação online; destino perguntado: branches do original ou outro fork.
 - A cópia local tem apenas remoto `upstream`; nenhum remoto de publicação configurado.
 - PRs, CI remoto desta entrega e confirmação posterior de conquistas dependem do destino.
 
 ## Pendências e próximo passo
-1. Frontend validado e commit local criado; publicar quando o fork estiver disponível.
-2. Backend validado; registrar commit local, sem aprovação remota presumida.
-   O feed retornou 200 nesta sessão; não presumir URL permanentemente inválida.
-3. Convites e suíte completa validados; registrar commit local.
-4. CONTRIBUTING/checklist atualizados; referências locais conferidas, sem configurações alteradas.
-5. Acrescentar screenshots reais com dados sintéticos e exemplos ao README.
+1. Cinco commits concluídos em branches específicas; árvore de trabalho isolada limpa.
+2. Publicar as cinco branches no destino autorizado e abrir PRs com dependências explícitas.
+3. Monitorar CI da revisão publicada, corrigir falhas reais e manter main intacta.
 - Usar branches específicas; registrar dependências quando uma entrega usar outra.
 - Testes e auditorias continuam obrigatórios; nenhum merge com checks falhando.
 - Configurar proteção da main exige aprovação específica; licença exige decisão do dono.
