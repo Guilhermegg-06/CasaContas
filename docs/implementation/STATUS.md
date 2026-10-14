@@ -5,7 +5,7 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
 - Trabalho isolado em `.data/achievements-work`; branch `teste/contribuicoes`.
 - Commit colaboração: `0dadbaa`; apresentação depende das quatro branches anteriores.
-- Apresentação: `527b3fc`; os cinco commits estão reunidos na branch de teste.
+- Apresentação: `527b3fc`; cinco commits reunidos, sem reescrita, na branch de teste.
 - Commit convites: `b89015f`; documentação depende dele, de `e2234f0` e `fb3b1a0`.
 - Commit backend: `e2234f0`; branch de convites depende dele.
 - Commit frontend: `fb3b1a0`; backend depende dessa branch para auditoria JavaScript verde.
@@ -19,7 +19,7 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - Auditoria inicial de branches, PRs, Issues, Actions, proteção e perfil.
 - PRs #13 e #14 integrados; último CI completo da main aprovado em 27/09:
   https://github.com/Guilhermegg-06/CasaContas/actions/runs/36282112418
-- Auditoria semanal de 12/10 falhou; CodeQL de 13/10 passou. CI atual não está saudável.
+- Auditoria semanal da main de 12/10 falhou; a branch de teste corrige os achados.
 - Frontend: reprodução automatizada com quatro vulnerabilidades altas e saída 1.
 - Correções compatíveis apenas no lockfile: brace-expansion 5.0.12, fast-uri 3.1.8,
   source-map-js 1.2.2 e undici 7.30.0; nenhuma dependência direta alterada.
@@ -55,9 +55,11 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - Branch: https://github.com/Guilhermegg-06/CasaContas/tree/teste/contribuicoes
 
 ## Pendências e próximo passo
-1. Cinco commits reunidos sem reescrita; este registro acompanha a publicação.
-2. Publicar somente a branch de teste e acionar Verificação do PR por workflow_dispatch.
-3. CI remoto ainda não aprovado; conferir a revisão exata e corrigir falhas reais.
+1. Branch publicada e disponível localmente; main e arquivos do usuário preservados.
+2. CI completo aprovado por workflow_dispatch na revisão `03467a72a25d8ef396a8d65c45c1e71c97174167`.
+   https://github.com/Guilhermegg-06/CasaContas/actions/runs/38598214890
+3. Somente este registro mudou após o CI; nenhum código ou workflow foi alterado.
+4. Próximo passo: revisar a branch; nenhum PR ou merge foi executado nesta publicação.
 - Usar branches específicas; registrar dependências quando uma entrega usar outra.
 - Testes e auditorias continuam obrigatórios; nenhum merge com checks falhando.
 - Configurar proteção da main exige aprovação específica; licença exige decisão do dono.
