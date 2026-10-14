@@ -25,18 +25,23 @@ jobs:
           java-version: "21"
           cache: maven
           cache-dependency-path: backend/pom.xml
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22.20.0"
+      - name: Validar tratamento de falhas da auditoria
+        run: node --test scripts/audit-backend.test.mjs
       - name: Analisar CVEs
         working-directory: backend
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: |
-          if [ -z "${NVD_API_KEY:-}" ]; then unset NVD_API_KEY; fi
-          ./mvnw -B -ntp -Psecurity dependency-check:check
+        run: bash ../scripts/audit-backend.sh
       - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: auditoria-java
-          path: backend/target/dependency-check-report.*
+          path: |
+            backend/target/dependency-check-report.*
+            backend/target/audit-attempts/*.log
 
   frontend:
     name: Dependências JavaScript

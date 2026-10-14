@@ -34,3 +34,23 @@ Com Node 22.20.0, `npm ci` e `npm audit --audit-level=high` passaram sem alertas
 Lint, formatação, 21 testes e build também passaram. Evidências completas ficam
 em `.data/evidence/frontend-*` da cópia de trabalho isolada. Esses resultados são
 locais: o fork e os checks remotos desta entrega dependem da conta de destino.
+
+## Auditoria backend — 2026-10-14
+
+O feed NVD que retornou 404 no PR #16 respondeu 200 nesta sessão. Sua URL permanece
+a oficial. O workflow passa a repetir a auditoria completa até três vezes apenas
+para os erros HTTP NVD classificados como transitórios; vulnerabilidades acima
+do limiar continuam reprovadas sem repetição. Cinco testes offline executam o
+comando real do workflow com uma fixture Maven e comprovam recuperação, limite
+de tentativas, bloqueio por vulnerabilidade e ausência de mascaramento do resultado.
+Dois desses cenários falharam corretamente no workflow anterior.
+
+Swagger UI 5.33.2 incorpora DOMPurify 3.4.16, confirmado no WebJar do Maven Central.
+Essa versão corrige os achados GHSA-6688-9rhm-gjv2 e GHSA-p98j-92pf-mc4p presentes
+em DOMPurify 3.4.13 do WebJar anterior. As dependências Spring/Tomcat não mudaram.
+
+Os 34 testes backend, cobertura, SpotBugs e Actionlint passaram. A auditoria real
+Dependency-Check 13.0.0 terminou com BUILD SUCCESS após 29 minutos: zero achados
+em 78 dependências, sem supressões novas ou mudança do limiar CVSS 7. Relatórios
+HTML/JSON e logs ficam em `.data/evidence/backend-audit-result` e `backend-audit-real.log`.
+Essas evidências são locais; o CI desta entrega ainda depende do fork.

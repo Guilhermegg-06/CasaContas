@@ -1,7 +1,24 @@
 # Evidências de qualidade e regressões
 
-Atualizado em 2026-09-25. O estado e a revisão final estão em [STATUS.md](STATUS.md).
+Atualizado em 2026-10-14. O estado e a revisão final estão em [STATUS.md](STATUS.md).
 Resultados históricos do MVP não aprovam alterações posteriores.
+
+## Contribuições em fork — auditorias
+
+- Frontend: `npm audit` reproduziu quatro alertas altos com saída 1. Após correções
+  transitivas direcionadas, instalação limpa/auditoria em Node 22.20.0 passaram;
+  lint, formatação, 21 testes, build e duas jornadas com API simulada passaram.
+- Workflow Java: a fixture executa o comando extraído do YAML. Dois testes falharam
+  porque a falha NVD interrompia a execução na primeira tentativa. O auditor novo
+  passou cinco cenários, exigindo o perfil/goal de auditoria e mantendo o bloqueio
+  por vulnerabilidade, inclusive quando há também um erro NVD.
+- Auditoria real Java 21: Dependency-Check 13.0.0, fonte oficial NVD, CVSS 7,
+  zero achados em 78 dependências, saída 0 após 29 minutos. Swagger UI 5.33.2
+  incorpora DOMPurify 3.4.16; 34 testes, cobertura, SpotBugs e Actionlint passaram.
+- Evidências completas: `.data/evidence/frontend-*`, `backend-audit-retry-*`,
+  `backend-swagger-verify.log`, `backend-audit-real.log` e `backend-audit-result/`.
+- São resultados locais da cópia isolada. O fork e os checks remotos desta entrega
+  ainda dependem da conta/organização de destino; nenhum merge foi executado.
 
 ## Preparação Render/Neon/Vercel
 

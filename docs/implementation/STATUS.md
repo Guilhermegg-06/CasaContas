@@ -3,7 +3,8 @@
 Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicados.
 
 - Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
-- Trabalho isolado em `.data/achievements-work`; branch `fix/auditoria-frontend`.
+- Trabalho isolado em `.data/achievements-work`; branch `fix/auditoria-backend`.
+- Commit frontend: `fb3b1a0`; backend depende dessa branch para auditoria JavaScript verde.
 - Base: `2063ed054099e78189b26ffff87aa5b928129f39`, main local/remota na auditoria.
 - O usuário autorizou implementar as cinco melhorias e fazer os commits em um fork.
 - Nenhum push para o original, merge, ajuste de proteção ou configuração de produção.
@@ -22,6 +23,13 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - Node 22.20.0: lint, Prettier, 21 testes em sete arquivos e build aprovados.
 - Navegador local (Node 24): duas jornadas com API simulada aprovadas, desktop e celular.
 - Logs completos da cópia isolada: `.data/evidence/frontend-*`.
+- Backend: dois testes reproduziram a ausência de repetição no workflow antigo.
+- Cinco testes offline do auditor passaram; vulnerabilidade continua bloqueada sem repetição.
+- Swagger UI 5.33.2 incorpora DOMPurify 3.4.16, confirmado no WebJar publicado.
+- Java 21/PostgreSQL: 34 testes, cobertura e SpotBugs passaram; Actionlint passou.
+- Encerramento do JVM de testes excedeu 30 s neste host; o build completo terminou com saída 0.
+- Auditoria real backend aprovada em Java 21, em 29 min, com zero achados em 78 dependências.
+- CVSS 7 preservado; relatórios em `.data/evidence/backend-audit-result` e `backend-audit-real.log`.
 - Pull Shark e YOLO confirmados no perfil público, inclusive detalhes dos eventos.
   https://github.com/Guilhermegg-06
 - Outras conquistas não confirmadas; não atribuir coautoria sem participação humana real.
@@ -35,8 +43,8 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - PRs, CI remoto desta entrega e confirmação posterior de conquistas dependem do destino.
 
 ## Pendências e próximo passo
-1. Frontend validado; registrar commit local e publicar quando o fork estiver disponível.
-2. Auditoria backend: distinguir falha NVD intermitente de vulnerabilidades reais.
+1. Frontend validado e commit local criado; publicar quando o fork estiver disponível.
+2. Backend validado; registrar commit local, sem aprovação remota presumida.
    O feed retornou 200 nesta sessão; não presumir URL permanentemente inválida.
 3. Cobrir convites concorrentes/expirados na API com PostgreSQL isolado.
 4. Atualizar CONTRIBUTING, checklist de conquistas e orientação de coautoria.
