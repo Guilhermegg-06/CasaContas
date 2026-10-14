@@ -22,3 +22,15 @@ uma troca de versão, sozinha, comprove a correção de todos os achados.
 As demais propostas do Dependabot permanecem independentes: não foram aplicadas
 atualizações de major de TypeScript, router ou ferramentas sem necessidade nesta fase.
 O resultado da revisão final e eventuais achados restantes ficam no registro de continuidade.
+
+## Correção do frontend — 2026-10-14
+
+A auditoria semanal de 12/10 apontou quatro dependências transitivas com severidade
+alta. A reprodução local também terminou com saída 1 e os mesmos quatro alertas.
+O lockfile passa a brace-expansion 5.0.12, fast-uri 3.1.8, source-map-js 1.2.2 e
+undici 7.30.0, mantendo as dependências diretas e suas faixas.
+
+Com Node 22.20.0, `npm ci` e `npm audit --audit-level=high` passaram sem alertas.
+Lint, formatação, 21 testes e build também passaram. Evidências completas ficam
+em `.data/evidence/frontend-*` da cópia de trabalho isolada. Esses resultados são
+locais: o fork e os checks remotos desta entrega dependem da conta de destino.

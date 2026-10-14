@@ -1,56 +1,52 @@
-# Continuidade — ambiente de teste Render/Neon/Vercel
+# Continuidade — contribuições legítimas em fork
 
-Atualizado em 2026-09-25 (horário local). Evidências valem para a revisão indicada.
+Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicados.
 
-- Objetivo atual: preparar Render/Neon/Vercel, validar CI e promover para main somente verde.
-- Branch: `deploy/ambiente-teste`; base `7ffccc7`; revisão funcional `4af0105`.
-- PR: https://github.com/Guilhermegg-06/CasaContas/pull/14 (checks e registro final de promoção).
-- Commits: `0f8aaa3` (Render/TLS), `aaa2640` (Vercel/API), `4af0105` (ensaio e documentação).
-- PR #13 da estabilização já integrado; main local/remota conferidas e CI aprovado:
-  https://github.com/Guilhermegg-06/CasaContas/actions/runs/36210428507
-- Preservar mudanças do usuário em `backend/mvnw.cmd` e pasta não rastreada `CasaContas/`.
-- Pilar: docs/requirements/engenharia-de-requisitos.md; somente P0.
-- Usuário autorizou push da branch, acompanhamento/correção do CI e merge após aprovação.
+- Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
+- Trabalho isolado em `.data/achievements-work`; branch `fix/auditoria-frontend`.
+- Base: `2063ed054099e78189b26ffff87aa5b928129f39`, main local/remota na auditoria.
+- O usuário autorizou implementar as cinco melhorias e fazer os commits em um fork.
+- Nenhum push para o original, merge, ajuste de proteção ou configuração de produção.
+- Preservar arquivos do usuário: `backend/mvnw.cmd` e pasta não rastreada `CasaContas/`.
+- Escopo continua P0; não editar migrations aplicadas nem usar dados reais.
 
-## Implementado nesta etapa
-- Spring usa `${PORT:8080}`; pool Hikari padrão 5, com mínimo ocioso 1.
-- Perfil render: JDBC com TLS verify-full/CA do Java, segredos/origem sem fallback local.
-- Render Blueprint: Docker backend, plano gratuito, checksPass e /actuator/health.
-- Quatro segredos referenciados por sync:false; nenhum valor real versionado.
-- Vercel: frontend/vercel.json com fallback para React e guia de VITE_API_URL.
-- Cliente normaliza barra final de VITE_API_URL também nas chamadas de refresh.
-- Ensaio de CI com PostgreSQL TLS real, PORT=10000, CORS exato e saúde 200/503.
-- Guia operacional: docs/operations/RENDER-NEON-VERCEL.md.
+## Concluído e evidências
+- Auditoria inicial de branches, PRs, Issues, Actions, proteção e perfil.
+- PRs #13 e #14 integrados; último CI completo da main aprovado em 27/09:
+  https://github.com/Guilhermegg-06/CasaContas/actions/runs/36282112418
+- Auditoria semanal de 12/10 falhou; CodeQL de 13/10 passou. CI atual não está saudável.
+- Frontend: reprodução automatizada com quatro vulnerabilidades altas e saída 1.
+- Correções compatíveis apenas no lockfile: brace-expansion 5.0.12, fast-uri 3.1.8,
+  source-map-js 1.2.2 e undici 7.30.0; nenhuma dependência direta alterada.
+- Node 22.20.0: instalação limpa e auditoria aprovadas, zero vulnerabilidades.
+- Node 22.20.0: lint, Prettier, 21 testes em sete arquivos e build aprovados.
+- Navegador local (Node 24): duas jornadas com API simulada aprovadas, desktop e celular.
+- Logs completos da cópia isolada: `.data/evidence/frontend-*`.
+- Pull Shark e YOLO confirmados no perfil público, inclusive detalhes dos eventos.
+  https://github.com/Guilhermegg-06
+- Outras conquistas não confirmadas; não atribuir coautoria sem participação humana real.
 
-## Evidências locais
-- deploy-config-red.log: configuração de PORT ausente; dois testes falharam antes da mudança.
-- deploy-config-green.log: dois testes de porta/pool/TLS/configuração aprovados.
-- deploy-api-red.log: URL com barra final gerava //api; regressão reproduzida.
-- deploy-frontend-green.log: lint, Prettier, 21 testes em sete arquivos e build aprovados.
-- deploy-actionlint.log: aprovado com apenas workflows isolados e rede desativada.
-- deploy-render-local.log aprovado: TLS real, porta 10000, CORS e healthcheck 200/503.
-- Falta inicial de Docker e ajuste de formatação não foram contados como defeitos funcionais.
+## Bloqueio do fork
+- Conta do conector e credencial Git: Guilhermegg-06, proprietária do original.
+- POST de fork com nome diferente retornou o original, com `fork=false`.
+- Não há forks existentes. O original não será tratado como fork nem receberá pushes.
+- Pergunta enviada: organização existente autorizada ou URL de fork em outra conta.
+- A cópia local tem apenas remoto `upstream`; nenhum remoto de publicação configurado.
+- PRs, CI remoto desta entrega e confirmação posterior de conquistas dependem do destino.
 
-## Bloqueio externo
-- URLs reais de backend/frontend e nomes dos serviços ainda não fornecidos.
-- Sem CLI/credenciais Render/Vercel/Neon e sem navegador conectado disponível.
-- Perguntas enviadas sobre URLs e cadastro/acesso aos segredos; não solicitar valores no chat.
-- Cadastro real dos quatro segredos no Render e VITE_API_URL/CORS nos painéis não executado.
-- Nenhum recurso contratado, deploy público realizado ou banco Neon acessado.
-- Teste sintético local/CI não comprova a conexão com uma instância Neon real.
+## Pendências e próximo passo
+1. Frontend validado; registrar commit local e publicar quando o fork estiver disponível.
+2. Auditoria backend: distinguir falha NVD intermitente de vulnerabilidades reais.
+   O feed retornou 200 nesta sessão; não presumir URL permanentemente inválida.
+3. Cobrir convites concorrentes/expirados na API com PostgreSQL isolado.
+4. Atualizar CONTRIBUTING, checklist de conquistas e orientação de coautoria.
+5. Acrescentar screenshots reais com dados sintéticos e exemplos ao README.
+- Usar branches específicas; registrar dependências quando uma entrega usar outra.
+- Testes e auditorias continuam obrigatórios; nenhum merge com checks falhando.
+- Configurar proteção da main exige aprovação específica; licença exige decisão do dono.
+- Render/Neon/Vercel e seus segredos não fazem parte das alterações desta missão.
 
-## Próximo passo
-- Ensaio TLS concluído, commits enviados e PR #14 criado.
-- Regra de promoção: todos os checks do SHA enviado devem passar; corrigir na branch se necessário.
-- Merge autorizado após CI verde; SHA e evidência final serão registrados no PR, preservando trabalho local.
-- Configurar os painéis quando os acessos e endereços indispensáveis estiverem disponíveis.
-
-## Continuidade da estabilização
-- PR/issue anteriores: https://github.com/Guilhermegg-06/CasaContas/pull/13 e issues/12.
-- V1 intacta; V2 arquiva cotas e restringe duplicações. Não retornar à imagem anterior
-  após edição com V2 sem plano de restauração/reconciliação (ADR 0004).
-- Base: 32 testes backend, 19 frontend, duas jornadas simuladas e uma real aprovados.
-- Concorrência financeira, migrations V1→V2, reinício e backup/restauração comprovados.
-- Main sem proteção; Dependabot pendente permanece fora do escopo deste ambiente.
-- Host Java 8/26: backend validado em Docker Java 21; CI usa Node 22.20.0.
-- GitHub: REST com credencial Git local; conector recusou escritas anteriormente.
+## Continuidade do P0
+- V1/V2 preservam histórico financeiro; retorno entre versões segue ADR 0004.
+- Testes existentes distinguem interface simulada de jornada real com API/PostgreSQL.
+- Testes isolados não comprovam a configuração ou a saúde dos provedores públicos.
