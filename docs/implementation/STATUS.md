@@ -3,15 +3,15 @@
 Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicados.
 
 - Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
-- Trabalho isolado em `.data/achievements-work`; branch `docs/apresentacao`.
+- Trabalho isolado em `.data/achievements-work`; branch `teste/contribuicoes`.
 - Commit colaboração: `0dadbaa`; apresentação depende das quatro branches anteriores.
-- Apresentação validada; cinco commits locais concluídos, destino online ainda pendente.
+- Apresentação: `527b3fc`; os cinco commits estão reunidos na branch de teste.
 - Commit convites: `b89015f`; documentação depende dele, de `e2234f0` e `fb3b1a0`.
 - Commit backend: `e2234f0`; branch de convites depende dele.
 - Commit frontend: `fb3b1a0`; backend depende dessa branch para auditoria JavaScript verde.
 - Base: `2063ed054099e78189b26ffff87aa5b928129f39`, main local/remota na auditoria.
 - O usuário autorizou implementar as cinco melhorias e fazer os commits em um fork.
-- Nenhum push para o original, merge, ajuste de proteção ou configuração de produção.
+- Publicação autorizada na branch de teste do original; main e produção preservadas.
 - Preservar arquivos do usuário: `backend/mvnw.cmd` e pasta não rastreada `CasaContas/`.
 - Escopo continua P0; não editar migrations aplicadas nem usar dados reais.
 
@@ -46,18 +46,18 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 - `node scripts/capture-demo.mjs`: saída 0; lint/formatação da jornada aprovados.
 - Cadastro sincronizado com resposta 201; log `demo-capture-verified.log` comprova resultado.
 
-## Bloqueio do fork
+## Destino da publicação
 - Conta do conector e credencial Git: Guilhermegg-06, proprietária do original.
 - POST de fork com nome diferente retornou o original, com `fork=false`.
 - Não há fork confirmado. O original não será tratado como fork.
-- Usuário pediu publicação online; destino perguntado: branches do original ou outro fork.
-- A cópia local tem apenas remoto `upstream`; nenhum remoto de publicação configurado.
-- PRs, CI remoto desta entrega e confirmação posterior de conquistas dependem do destino.
+- Usuário solicitou reunir os commits em uma branch de teste após o pedido online.
+- Destino: `upstream`, Guilhermegg-06/CasaContas, branch `teste/contribuicoes`.
+- Branch: https://github.com/Guilhermegg-06/CasaContas/tree/teste/contribuicoes
 
 ## Pendências e próximo passo
-1. Cinco commits concluídos em branches específicas; árvore de trabalho isolada limpa.
-2. Publicar as cinco branches no destino autorizado e abrir PRs com dependências explícitas.
-3. Monitorar CI da revisão publicada, corrigir falhas reais e manter main intacta.
+1. Cinco commits reunidos sem reescrita; este registro acompanha a publicação.
+2. Publicar somente a branch de teste e acionar Verificação do PR por workflow_dispatch.
+3. CI remoto ainda não aprovado; conferir a revisão exata e corrigir falhas reais.
 - Usar branches específicas; registrar dependências quando uma entrega usar outra.
 - Testes e auditorias continuam obrigatórios; nenhum merge com checks falhando.
 - Configurar proteção da main exige aprovação específica; licença exige decisão do dono.
