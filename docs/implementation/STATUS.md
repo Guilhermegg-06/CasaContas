@@ -3,7 +3,8 @@
 Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicados.
 
 - Objetivo: corrigir auditorias, testar convites e melhorar colaboração/apresentação.
-- Trabalho isolado em `.data/achievements-work`; branch `test/convites-concorrencia`.
+- Trabalho isolado em `.data/achievements-work`; branch `docs/continuidade-colaboracao`.
+- Commit convites: `b89015f`; documentação depende dele, de `e2234f0` e `fb3b1a0`.
 - Commit backend: `e2234f0`; branch de convites depende dele.
 - Commit frontend: `fb3b1a0`; backend depende dessa branch para auditoria JavaScript verde.
 - Base: `2063ed054099e78189b26ffff87aa5b928129f39`, main local/remota na auditoria.
@@ -51,7 +52,7 @@ Atualizado em 2026-10-14. Resultados pertencem à revisão e ao ambiente indicad
 2. Backend validado; registrar commit local, sem aprovação remota presumida.
    O feed retornou 200 nesta sessão; não presumir URL permanentemente inválida.
 3. Convites e suíte completa validados; registrar commit local.
-4. Atualizar CONTRIBUTING, checklist de conquistas e orientação de coautoria.
+4. CONTRIBUTING/checklist atualizados; referências locais conferidas, sem configurações alteradas.
 5. Acrescentar screenshots reais com dados sintéticos e exemplos ao README.
 - Usar branches específicas; registrar dependências quando uma entrega usar outra.
 - Testes e auditorias continuam obrigatórios; nenhum merge com checks falhando.
