@@ -97,6 +97,4 @@ Resultados pertencem à revisão em que foram executados. Os números histórico
 do MVP não aprovam mudanças posteriores. Consulte [STATUS.md](docs/implementation/STATUS.md),
 [TDD_EVIDENCE.md](docs/implementation/TDD_EVIDENCE.md) e os checks do PR.
 
-## Escopo
 
-Somente requisitos P0 fazem parte deste MVP. Recorrência, pagamentos parciais, recuperação de senha, notificações automáticas e exportações estão no [backlog](docs/implementation/BACKLOG.md). A licença ainda depende de decisão explícita do proprietário.
